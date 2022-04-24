@@ -5,6 +5,7 @@ import helmet from "helmet";
 import userRouter from "./router/users";
 import toiletRouter from "./router/toilets";
 import reportRouter from "./router/reports";
+import "reflect-metadata";
 
 const app = express();
 const port = 8080;
