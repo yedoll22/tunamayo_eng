@@ -26,10 +26,10 @@ export class User extends BaseEntity {
   isAdmin: boolean;
 
   @Column()
-  serviceProvider: string;
+  oAuthProvider: string;
 
   @Column({ unique: true })
-  serviceProviderId: string;
+  oAuthProviderId: string;
 
   @CreateDateColumn()
   createdAt: Date;

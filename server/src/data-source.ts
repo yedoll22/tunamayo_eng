@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const AppDataSource = new DataSource({
+export const DB = new DataSource({
   type: "mysql",
   host: process.env.RDS_HOST,
   port: 3306,
@@ -12,6 +12,6 @@ export const AppDataSource = new DataSource({
   database: process.env.RDS_DATABASE,
   synchronize: false,
   logging: true,
-  entities: ["src/entity/**/*.ts"],
+  entities: [__dirname + "/entity/**/*.ts"],
   migrations: [],
 });

@@ -11,6 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
+const Comment_1 = require("./Comment");
+const Like_1 = require("./Like");
+const Report_1 = require("./Report");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -32,11 +35,11 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "serviceProvider", void 0);
+], User.prototype, "oAuthProvider", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
-], User.prototype, "serviceProviderId", void 0);
+], User.prototype, "oAuthProviderId", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
@@ -45,6 +48,18 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)(),
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Comment_1.Comment, (comment) => comment.userId),
+    __metadata("design:type", Array)
+], User.prototype, "comments", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Like_1.Like, (like) => like.userId),
+    __metadata("design:type", Array)
+], User.prototype, "likes", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Report_1.Report, (report) => report.userId),
+    __metadata("design:type", Array)
+], User.prototype, "reports", void 0);
 User = __decorate([
     (0, typeorm_1.Entity)("user")
 ], User);
