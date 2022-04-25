@@ -6,19 +6,22 @@ import userRouter from "./router/users";
 import toiletRouter from "./router/toilets";
 import reportRouter from "./router/reports";
 import "reflect-metadata";
+import { DB } from "./data-source";
+
+DB.initialize();
 
 const app = express();
 const port = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-    methods: ["GET", "POST", "PATCH", "DELETE"],
-  })
-);
+app.use(cors());
+
+// {   //  "dev": "nodemon src/app.ts",
+//   origin: "*",
+//   credentials: true,
+//   methods: ["GET", "POST", "PATCH", "DELETE", "OPTION"],
+// }
 
 app.use(morgan("tiny"));
 app.use(helmet());

@@ -15,9 +15,9 @@ exports.AppDataSource = new typeorm_1.DataSource({
     username: process.env.RDS_USERNAME,
     password: process.env.RDS_PASSWORD,
     database: process.env.RDS_DATABASE,
-    synchronize: true,
+    synchronize: false,
     logging: true,
-    entities: ["src/entity/**/*.ts"],
+    entities: [__dirname + "/entity/**/*.{js,ts}"],
     migrations: [],
 });
 //# sourceMappingURL=data-source.js.map
