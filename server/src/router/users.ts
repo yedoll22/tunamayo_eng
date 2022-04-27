@@ -16,12 +16,44 @@ router.get("/token", async (req: Request, res: Response) => {
   res.sendStatus(200);
 });
 
+router.post("/signup", async (req: Request, res: Response) => {
+  const { nickname, email, oAuthProvider, oAtuhId } = req.body;
+  // 클라이언트에서 받아온 요청 바디 값들을 user 테이블에 insert한다.
+
+  try {
+    const isOverlapNickname = await DB.manager.findOne(User, {
+      where: { nickname },
+    });
+
+    // 닉네임 중복된 경우.
+    if (isOverlapNickname)
+      return res.status(409).json({ message: "nickname overlap" });
+
+    const insertQuery = await DB.manager.insert(User, {
+      nickname,
+      email,
+      oAuthProvider,
+      oAuthProviderId: oAtuhId,
+    });
+
+    const payload = { id: insertQuery.identifiers[0].id };
+    const tunaToken = jwt.sign(payload, process.env.JWT_SECRET! as string, {
+      expiresIn: "30d",
+    });
+
+    res.setHeader("Set-Cookie", `token=${tunaToken}; Path=/`);
+    return res.redirect("http://localhost:3000/");
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
 router.get("/kakao", async (req: Request, res: Response) => {
   // 카카오 OAuth 페이지에서 동의 완료 후 redirect되는 api
-  console.log("start");
   const code = req.query?.code;
   if (!code) return res.status(403).json({ message: "oauth code not found" });
-  console.log("second");
+
   try {
     const kakaoTokenRequest = await axios.post(
       `https://kauth.kakao.com/oauth/token`,
@@ -56,22 +88,23 @@ router.get("/kakao", async (req: Request, res: Response) => {
     // DB에 해당 oauthProvider(KAKAO)와 oauthProviderId 세트가 있는지 확인.
     // 조건 : oauthProvider가 "kakao" + oauthProviderId가 kakaoOauthId 인 레코드가 있는지 없는지 찾는다.
     const queryResult = await DB.manager.findOne(User, {
-      where: { oAuthProvider: "kakao", oAuthProviderId: "312" },
+      where: { oAuthProvider: "kakao", oAuthProviderId: kakaoOauthId },
     });
 
     // CASE1) 이미 가입된 유저인 경우 -> JWT.TOKEN 재발급해서 쿠키에 담아서 준다.
     if (queryResult) {
       const payload = { id: queryResult.id };
-
       const tunaToken = jwt.sign(payload, process.env.JWT_SECRET! as string, {
         expiresIn: "30d",
       });
 
       res.setHeader("Set-Cookie", `token=${tunaToken}; Path=/`);
-      return res.redirect("/");
+      return res.redirect("http://localhost:3000");
     }
-
-    return res.json({ message: "login complete" });
+    // CASE2) 처음 가입하는 유저인 경우 -> 클라이언트의 가입 페이지로 리다이렉트 시켜줌.
+    return res.redirect(
+      `http://localhost:3000/signup?oauthprovider=kakao&oauthid=${kakaoOauthId}&email=${kakaoUserEmail}`
+    );
   } catch (err) {
     console.log(err);
   }
