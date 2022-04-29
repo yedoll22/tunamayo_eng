@@ -1,8 +1,9 @@
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
+  const navigate = useNavigate();
   const kakaourl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT_URI}&response_type=code`;
   const googleurl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.REACT_APP_GOOGLE_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_GOOGLE_REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
-  console.log("clientid:", process.env.REACT_APP_GOOGLE_CLIENT_ID);
-  console.log("redirecturi:", process.env.REACT_APP_GOOGLE_REDIRECT_URI);
 
   return (
     <div className="pt-[114px] px-4 flex flex-col items-center bg-tnBlueLight h-[100vh]">
@@ -47,7 +48,7 @@ const Login = () => {
 
       <div className="py-[11px]">
         <button
-          onClick={() => {}}
+          onClick={() => navigate("/")}
           className="text-tnBlack font-normal text-base leading-[26px]"
         >
           로그인 없이 둘러보기
