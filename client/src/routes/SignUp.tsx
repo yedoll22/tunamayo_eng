@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 
 const SignUp = () => {
-  const history = useHistory();
   const location = useLocation();
+  const navigate = useNavigate();
   const [nickname, setNickname] = useState<string>("");
   const queryString: string = location.search;
   const oAuthProvider: string = queryString.split("&")[0].split("=")[1];
@@ -21,7 +21,7 @@ const SignUp = () => {
         oAtuhId,
       })
       .then((res) => {
-        if (res.status === 200) history.replace({ pathname: "/" });
+        if (res.status === 200) navigate("/", { replace: true });
       });
   };
 
