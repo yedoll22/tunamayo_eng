@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
+
 import axios from "axios";
 
 const SignUp = () => {
+  const history = useHistory();
   const location = useLocation();
   const [nickname, setNickname] = useState<string>("");
   const queryString: string = location.search;
@@ -10,15 +12,17 @@ const SignUp = () => {
   const oAtuhId: string = queryString.split("&")[1].split("=")[1];
   const email: string = queryString.split("&")[2].split("=")[1];
 
-  const signUpRequest = async () => {
-    await axios
+  const signUpRequest = () => {
+    axios
       .post("http://localhost:8080/users/signup", {
         nickname,
         email,
         oAuthProvider,
         oAtuhId,
       })
-      .then(console.log);
+      .then((res) => {
+        if (res.status === 200) history.replace({ pathname: "/" });
+      });
   };
 
   return (

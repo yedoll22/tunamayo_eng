@@ -1,19 +1,25 @@
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./routes/Login";
 import SignUp from "./routes/SignUp";
+import Main from "./routes/Main";
 
 const Router = () => {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <Route path="/signup">
-          <SignUp />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            <Main />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/signup">
+            <SignUp />
+          </Route>
+        </Switch>
+      </BrowserRouter>
+    </>
   );
 };
 

@@ -42,10 +42,12 @@ router.post("/signup", async (req: Request, res: Response) => {
     });
 
     res.setHeader("Set-Cookie", `token=${tunaToken}; Path=/`);
-    return res.redirect("http://localhost:3000/");
+    // res.setHeader("Access-Control-Allow-origin", "*");
+    // res.setHeader("Access-Control-Allow-Credentials", "true");
+    return res.sendStatus(200);
   } catch (e) {
     console.log(e);
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 });
 
@@ -110,8 +112,70 @@ router.get("/kakao", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/google", async (req: Request, res: Response) => {
-  res.sendStatus(200);
+router.get("/google", async (req: Request, res: Response) => {
+  // 구글 OAuth 페이지에서 동의 완료 후 redirect되는 api
+  const code = req.query?.code;
+  console.log(code);
+  if (!code) return res.status(403).json({ message: "oauth code not found" });
+
+  try {
+    const googleTokenRequest = await axios.post(
+      `https://oauth2.googleapis.com/token`,
+      {},
+      {
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded",
+        },
+        params: {
+          grant_type: "authorization_code",
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          code,
+        },
+      }
+    );
+
+    const { access_token } = googleTokenRequest.data;
+    const googleUserInfoUrl =
+      "https://people.googleapis.com/v1/people/me?personFields=emailAddresses";
+
+    const googleUserInfoRequest = await axios.get(googleUserInfoUrl, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+      },
+    });
+
+    const googleUserInfo = googleUserInfoRequest.data;
+    const googleOauthId = String(
+      googleUserInfo.emailAddresses[0].metadata.source.id
+    );
+    const googleUserEmail = googleUserInfo.emailAddresses[0].value;
+
+    // DB에 해당 oauthProvider(GOOGLE)와 oauthProviderId 세트가 있는지 확인.
+    // 조건 : oauthProvider가 "google" + oauthProviderId가 googleOauthId 인 레코드가 있는지 없는지 찾는다.
+    const queryResult = await DB.manager.findOne(User, {
+      where: { oAuthProvider: "google", oAuthProviderId: googleOauthId },
+    });
+
+    // CASE1) 이미 가입된 유저인 경우 -> JWT.TOKEN 재발급해서 쿠키에 담아서 준다.
+    if (queryResult) {
+      const payload = { id: queryResult.id };
+      const tunaToken = jwt.sign(payload, process.env.JWT_SECRET! as string, {
+        expiresIn: "30d",
+      });
+
+      res.setHeader("Set-Cookie", `token=${tunaToken}; Path=/`);
+      return res.redirect("http://localhost:3000");
+    }
+    // CASE2) 처음 가입하는 유저인 경우 -> 클라이언트의 가입 페이지로 리다이렉트 시켜줌.
+    return res.redirect(
+      `http://localhost:3000/signup?oauthprovider=google&oauthid=${googleOauthId}&email=${googleUserEmail}`
+    );
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 router.post("/logout", async (req: Request, res: Response) => {

@@ -15,13 +15,16 @@ const port = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-
-// {   //  "dev": "nodemon src/app.ts",
-//   origin: "*",
-//   credentials: true,
-//   methods: ["GET", "POST", "PATCH", "DELETE", "OPTION"],
-// }
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:8080",
+      "http://localhost:3000/",
+    ],
+    credentials: true,
+  })
+);
 
 app.use(morgan("tiny"));
 app.use(helmet());
