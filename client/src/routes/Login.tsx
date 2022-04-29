@@ -1,5 +1,9 @@
 const Login = () => {
   const kakaourl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT_URI}&response_type=code`;
+  const googleurl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.REACT_APP_GOOGLE_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_GOOGLE_REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
+  console.log("clientid:", process.env.REACT_APP_GOOGLE_CLIENT_ID);
+  console.log("redirecturi:", process.env.REACT_APP_GOOGLE_REDIRECT_URI);
+
   return (
     <div className="pt-[114px] px-4 flex flex-col items-center bg-tnBlueLight h-[100vh]">
       <div className="mb-6">
@@ -27,7 +31,10 @@ const Login = () => {
         </div>
       </a>
 
-      <a className="w-full bg-white rounded-lg flex itmes-center justify-center">
+      <a
+        href={googleurl}
+        className="w-full bg-white rounded-lg flex itmes-center justify-center"
+      >
         <img
           className="mr-2 py-3"
           src="/images/login/google-login.svg"
