@@ -34,5 +34,5 @@ export class Report extends BaseEntity {
   updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.id)
-  users: User[];
+  user: User;
 }

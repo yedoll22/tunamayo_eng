@@ -1,4 +1,4 @@
-import express, { query, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { DB } from "../data-source";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -181,5 +181,4 @@ router.get("/google", async (req: Request, res: Response) => {
 router.post("/logout", async (req: Request, res: Response) => {
   res.sendStatus(200);
 });
-
 export default router;

@@ -7,6 +7,7 @@ import toiletRouter from "./router/toilets";
 import reportRouter from "./router/reports";
 import "reflect-metadata";
 import { DB } from "./data-source";
+import cookieparser from "cookie-parser";
 
 DB.initialize();
 
@@ -28,6 +29,7 @@ app.use(
 
 app.use(morgan("tiny"));
 app.use(helmet());
+app.use(cookieparser());
 
 app.use("/users", userRouter);
 app.use("/toilets", toiletRouter);
