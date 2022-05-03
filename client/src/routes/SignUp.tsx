@@ -9,7 +9,6 @@ const SignUp = () => {
   const [nickname, setNickname] = useState<string>("");
   const [nicknameMessage, setNicknameMessage] = useState<string>("");
   const [signupErrorMessage, setSignupErrorMessage] = useState<string>("");
-  console.log(signupErrorMessage);
   const [isNickname, setIsNickname] = useState<boolean>(false);
   const queryString: string = location.search;
   const oAuthProvider: string = queryString.split("&")[0].split("=")[1];
