@@ -4,12 +4,19 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
+interface UserData {
+  id: number;
+}
+
 const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
   const token = req.cookies?.token;
   try {
     if (!token) return res.status(403).json({ message: "Not authorized" });
 
-    const userData: any = jwt.verify(token, process.env.JWT_SECRET! as string);
+    const userData = jwt.verify(
+      token,
+      process.env.JWT_SECRET! as string
+    ) as UserData;
     const userId = userData.id;
 
     if (!userId) return res.status(403).json({ message: "Invalid token" });
