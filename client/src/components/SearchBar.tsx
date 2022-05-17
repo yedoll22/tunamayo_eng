@@ -62,7 +62,7 @@ const SearchBar = ({ positions, setCenter }: SearchBarProps) => {
               />
               {keyword.length ? (
                 <img
-                  src="/images/delete.svg"
+                  src="/images/common/delete.svg"
                   alt="clear-button"
                   onClick={() => {
                     setKeyword("");
