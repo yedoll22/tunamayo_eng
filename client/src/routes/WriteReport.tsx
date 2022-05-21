@@ -35,6 +35,8 @@ const WriteReport = () => {
         title={reportType === "report" ? "화장실 제보하기" : "1:1 문의하기"}
         isAdmin={false}
         action={postReport}
+        reportTitle={reportTitle}
+        reportContent={reportContent}
       />
       <div className="relative">
         <input
