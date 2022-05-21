@@ -1,6 +1,8 @@
-import React from "react";
+interface LoadingProps {
+  content: string;
+}
 
-const CurrentLocationLoading = () => {
+const Loading = ({ content }: LoadingProps) => {
   return (
     <div className="absolute top-0 w-full min-h-[100vh] z-[100] bg-loadingOverlay ">
       <div className="flex justify-center items-center h-screen">
@@ -20,11 +22,11 @@ const CurrentLocationLoading = () => {
           />
         </svg>
         <div className="font-bold text-base leading-[26px] text-[#fefefe]">
-          현재 위치 불러오는중 ...
+          {content}
         </div>
       </div>
     </div>
   );
 };
 
-export default CurrentLocationLoading;
+export default Loading;

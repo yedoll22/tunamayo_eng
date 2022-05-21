@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import CurrentLocationLoading from "../components/CurrentLocationLoading";
+import Loading from "./Loading";
 
 interface Center {
   lat: number;
@@ -64,7 +64,7 @@ const CurrentLocationButton = ({ setCenter }: CurrentLocationButtonProps) => {
           />
         </div>
       </div>
-      {clickState && <CurrentLocationLoading />}
+      {clickState && <Loading content="현재 위치 불러오는 중..." />}
     </>
   );
 };

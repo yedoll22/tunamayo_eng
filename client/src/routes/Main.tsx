@@ -14,7 +14,7 @@ import NavButton from "../components/NavButton";
 import Drawer from "../components/Drawer";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
-import CurrentLocationLoading from "../components/CurrentLocationLoading";
+import Loading from "../components/Loading";
 
 const Main = () => {
   const navigate = useNavigate();
@@ -189,7 +189,7 @@ const Main = () => {
           <NavButton setDrawer={setDrawer} />
           <CurrentLocationButton setCenter={setCenter} />
           {isLoading ? (
-            <CurrentLocationLoading />
+            <Loading content="현재 위치 불러 오는 중" />
           ) : (
             <MarkerClusterer
               averageCenter={true} // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
