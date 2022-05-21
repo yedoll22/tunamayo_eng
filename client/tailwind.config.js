@@ -1,3 +1,5 @@
+const { transform } = require("typescript");
+
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
@@ -17,6 +19,7 @@ module.exports = {
         gray60: "#7A7A7A",
         gray80: "#404040",
         overlay: "rgba(34,34,34,0.45)",
+        loadingOverlay: "rgba(34, 34, 34, 0.25)",
       },
       boxShadow: {
         search: "0px 1px 5px rgba(107, 107, 107, 0.1);",
