@@ -54,10 +54,9 @@ module.exports = {
         },
         dropdown: {
           "0%": {
-            opacity: 1,
-            transform: "scaleY(0%)",
+            opacity: 0,
           },
-          "100%": { opacity: 1, transform: "scaleY(100%)" },
+          "100%": { opacity: 1 },
         },
       },
       animation: {
