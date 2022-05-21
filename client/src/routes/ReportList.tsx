@@ -32,7 +32,7 @@ const ReportList = () => {
   const [renderList, setRenderList] = useState<IReport[]>([]);
   const [renderIndex, setRenderIndex] = useState(0);
   const [pageIndex, setPageIndex] = useState(0);
-  // console.log(renderIndex);
+
   useEffect(() => {
     setPageIndex(Math.floor(renderIndex / 5));
   }, [renderIndex]);
@@ -103,12 +103,8 @@ const ReportList = () => {
         />
 
         <div className="flex">
-          {reportList.map((el, i) => {
-            console.log("first i : ", i);
+          {reportList.map((_, i) => {
             if (
-              // pageIndex가 1일때   25 <= i <= 29
-              // 전체 리스트에서 i가  25, 26, 27, 28, 29
-              // second i === 2
               i >= pageIndex * 5 &&
               i <= pageIndex * 5 + 4 &&
               i * 7 <= reportList.length
@@ -119,7 +115,6 @@ const ReportList = () => {
                   onClick={() => {
                     updateRenderList(i);
                     setRenderIndex(i);
-                    console.log("second i : ", i);
                   }}
                   className={indexClass(i)}
                 >

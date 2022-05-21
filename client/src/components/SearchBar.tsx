@@ -12,11 +12,11 @@ interface ToiletPosition {
 }
 
 interface SearchBarProps {
-  positions: ToiletPosition[];
+  data?: ToiletPosition[];
   setCenter: any;
 }
 
-const SearchBar = ({ positions, setCenter }: SearchBarProps) => {
+const SearchBar = ({ data, setCenter }: SearchBarProps) => {
   const [matchingList, setMatchingList] = useState<ToiletPosition[]>([]);
   const [keyword, setKeyword] = useState("");
   const [searchOverlay, setSearchOverlay] = useState<boolean>(false);
@@ -26,8 +26,8 @@ const SearchBar = ({ positions, setCenter }: SearchBarProps) => {
   };
 
   useEffect(() => {
-    if (keyword.length) {
-      const filteredToilet = [...positions].filter((toilet) => {
+    if (keyword.length && data) {
+      const filteredToilet = [...data].filter((toilet) => {
         return (
           toilet.roadName.includes(keyword) || toilet.title.includes(keyword)
         );
