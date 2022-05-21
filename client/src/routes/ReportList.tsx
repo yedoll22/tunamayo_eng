@@ -29,13 +29,11 @@ const ReportList = () => {
   const queryString: string = location.search;
   const reportType: string = queryString.split("=")[1];
   const [reportList, setReportList] = useState<IReport[]>([]);
-  const [renderList, setRenderList] = useState<IReport[]>([]);
-  const [renderIndex, setRenderIndex] = useState(0);
-  const [pageIndex, setPageIndex] = useState(0);
-
-  useEffect(() => {
-    setPageIndex(Math.floor(renderIndex / 5));
-  }, [renderIndex]);
+  const [page, setPage] = useState(1);
+  const limit = 7;
+  const offset = (page - 1) * limit;
+  const numPages = Math.ceil(reportList.length / limit);
+  const pageGroup = Math.ceil(page / 5) - 1;
 
   const reportListRequest = async () => {
     const request = await customAxios.get("/reports");
@@ -44,33 +42,26 @@ const ReportList = () => {
       (report: IReport) => report.reportType === reportType
     );
     setReportList(reports);
-    setRenderList(reports.slice(0, 7));
   };
 
-  const updateRenderList = (index: number) => {
-    setRenderList(reportList.slice(index * 7, index * 7 + 7));
-  };
   const indexClass = (index: number) => {
-    if (index === renderIndex)
+    if (index === page)
       return "cursor-pointer pt-2 pb-[9px] px-[10px] text-base font-normal leading-[26px] text-tnBlack";
     else
       return "cursor-pointer pt-2 pb-[9px] px-[10px] text-base font-normal leading-[26px] text-gray20";
   };
 
   const nextPageIconAction = () => {
-    if (renderIndex === Math.ceil(reportList.length / 7) - 1) return;
+    if (page === Math.ceil(reportList.length / 7)) return;
     else {
-      setRenderIndex(renderIndex + 1);
-      updateRenderList(renderIndex + 1);
+      setPage(page + 1);
     }
-    console.log("renderIndex : ", renderIndex);
   };
 
   const prevPageIconAction = () => {
-    if (renderIndex === 0) return;
+    if (page === 1) return;
     else {
-      updateRenderList(renderIndex - 1);
-      setRenderIndex(renderIndex - 1);
+      setPage(page - 1);
     }
   };
 
@@ -86,7 +77,7 @@ const ReportList = () => {
       />
 
       <div className="min-h-[600px]">
-        {renderList.map((report: IReport) => {
+        {reportList.slice(offset, offset + limit).map((report: IReport) => {
           return <Report key={report.id} report={report} />;
         })}
       </div>
@@ -95,40 +86,34 @@ const ReportList = () => {
           className="w-6 h-6 cursor-pointer"
           onClick={prevPageIconAction}
           src={
-            renderIndex === 0
+            page === 1
               ? "/images/report/prev-icon-gray.svg"
               : "/images/report/prev-icon-black.svg"
           }
           alt="prev"
         />
-
         <div className="flex">
-          {reportList.map((_, i) => {
-            if (
-              i >= pageIndex * 5 &&
-              i <= pageIndex * 5 + 4 &&
-              i * 7 <= reportList.length
-            ) {
-              return (
-                <div
-                  key={i}
-                  onClick={() => {
-                    updateRenderList(i);
-                    setRenderIndex(i);
-                  }}
-                  className={indexClass(i)}
-                >
-                  {i + 1}
-                </div>
-              );
-            }
-          })}
+          {Array(numPages)
+            .fill(0)
+            .map((_, i) => {
+              if (i >= pageGroup * 5 && i <= pageGroup * 5 + 4) {
+                return (
+                  <div
+                    key={i + 1}
+                    className={indexClass(i + 1)}
+                    onClick={() => setPage(i + 1)}
+                  >
+                    {i + 1}
+                  </div>
+                );
+              }
+            })}
         </div>
         <img
           className="w-6 h-6 cursor-pointer"
           onClick={nextPageIconAction}
           src={
-            renderIndex === Math.ceil(reportList.length / 7) - 1
+            page === Math.ceil(reportList.length / 7)
               ? "/images/report/next-icon-gray.svg"
               : "/images/report/next-icon-black.svg"
           }
