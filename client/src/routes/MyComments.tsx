@@ -11,6 +11,7 @@ const MyComments = () => {
       .get("/users/comments")
       .then((res) => setComments(res.data.myComments));
   }, []);
+
   return (
     <>
       <div>내가 쓴 댓글</div>
