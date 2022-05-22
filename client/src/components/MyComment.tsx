@@ -2,6 +2,7 @@ import { MyCommentProps } from "../lib/interfaces";
 import { customAxios } from "../lib/customAxios";
 import { useState, useEffect } from "react";
 import { IToilet } from "../lib/interfaces";
+import { useNavigate } from "react-router-dom";
 
 const MyComment = ({
   content,
@@ -9,6 +10,7 @@ const MyComment = ({
   rating,
   toiletId,
 }: MyCommentProps) => {
+  const navigate = useNavigate();
   const [toilet, setToilet] = useState<IToilet>();
   const toiletRequest = async () => {
     const request = await customAxios.get(`/toilets/${toiletId}`);
@@ -66,7 +68,12 @@ const MyComment = ({
       </div>
 
       <div className="justify-between font-normal text-sm leading-[22px] text-gray40">
-        <div>{toilet?.toiletName}</div>
+        <div
+          onClick={() => navigate(`/toilet/${toilet?.id}`)}
+          className="cursor-pointer"
+        >
+          {toilet?.toiletName}
+        </div>
         <div>{createdAt.split("T")[0]}</div>
       </div>
     </div>
