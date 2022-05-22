@@ -6,6 +6,7 @@ interface DrawerHeaderProps {
   reportTitle?: string;
   reportContent?: string;
   content?: string;
+  rightNone?: boolean;
   action?: () => void;
 }
 
@@ -15,6 +16,7 @@ const DrawerHeader = ({
   reportTitle,
   reportContent,
   content,
+  rightNone,
   action,
 }: DrawerHeaderProps) => {
   const navigate = useNavigate();
@@ -45,7 +47,11 @@ const DrawerHeader = ({
           <button
             onClick={action}
             disabled={isDisabled()}
-            className="disabled:text-gray20 disabled:font-normal text-base leading-[26px] text-tnBlue"
+            className={
+              rightNone
+                ? "text-transparent"
+                : "disabled:text-gray20 disabled:font-normal text-base leading-[26px] text-tnBlue"
+            }
           >
             완료
           </button>
