@@ -15,7 +15,7 @@ const MyComments = () => {
 
   return (
     <>
-      <DrawerHeader isAdmin={false} title="내가 쓴 리뷰" />
+      <DrawerHeader isAdmin={false} title="내가 쓴 리뷰" rightNone />
       {comments?.map((comment) => {
         return (
           <div key={comment.id}>

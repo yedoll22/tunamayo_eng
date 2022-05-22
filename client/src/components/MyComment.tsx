@@ -67,7 +67,7 @@ const MyComment = ({
         {content}
       </div>
 
-      <div className="justify-between font-normal text-sm leading-[22px] text-gray40">
+      <div className="flex justify-between font-normal text-sm leading-[22px] text-gray40">
         <div
           onClick={() => navigate(`/toilet/${toilet?.id}`)}
           className="cursor-pointer"
