@@ -2,6 +2,7 @@ import { customAxios } from "../lib/customAxios";
 import { useEffect, useState } from "react";
 import MyComment from "../components/MyComment";
 import { IComment } from "../lib/interfaces";
+import DrawerHeader from "../components/DrawerHeader";
 
 const MyComments = () => {
   const [comments, setComments] = useState<IComment[]>([]);
@@ -14,7 +15,7 @@ const MyComments = () => {
 
   return (
     <>
-      <div>내가 쓴 댓글</div>
+      <DrawerHeader isAdmin={false} title="내가 쓴 리뷰" />
       {comments?.map((comment) => {
         return (
           <div key={comment.id}>
