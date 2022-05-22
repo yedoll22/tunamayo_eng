@@ -63,7 +63,7 @@ const Comment = ({
               <div key={i}>
                 <img
                   className="w-[15px] h-[15px]"
-                  src="/images/star/star-filled-black.svg"
+                  src="/images/star/star-filled-blue.svg"
                   alt="filled"
                 />
               </div>
@@ -74,7 +74,7 @@ const Comment = ({
               <div key={i}>
                 <img
                   className="w-[15px] h-[15px]"
-                  src="/images/star/star-half-black.svg"
+                  src="/images/star/star-half-blue.svg"
                   alt="half"
                 />
               </div>
@@ -98,6 +98,7 @@ const Comment = ({
 
         {isMine && (
           <div className="flex space-x-4">
+            <div className="flex-1"></div>
             <div
               onClick={() =>
                 navigate(`/toilet/${toiletId}/comment?commentId=${commentId}`)
