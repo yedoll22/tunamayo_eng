@@ -35,7 +35,7 @@ const userController = {
         where: { nickname: changedNickname },
       });
       if (isOverlapped)
-        return res.status(401).json({ message: "nickname overlap" });
+        return res.status(409).json({ message: "nickname overlap" });
       await DB.manager.update(User, userId, { nickname: changedNickname });
       return res.sendStatus(200);
     } catch (err) {
