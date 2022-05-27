@@ -1,4 +1,4 @@
-<img alt="logo" src="https://user-images.githubusercontent.com/66931635/165492483-458cd129-013b-4c30-9bff-37e8fbb21780.png">
+<img alt="assets" src="https://cdn.discordapp.com/attachments/953677803562348556/978696191804080158/assets.png">
 
 # 🚻 서울시 화장실 위치 정보 서비스, 참치마요
 참치마요에서는<br /> 자기 근처에 있는 화장실 위치 및 정보를 알 수 있어요. <br />
