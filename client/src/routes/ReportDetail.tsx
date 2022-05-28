@@ -2,24 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DrawerHeader from "../components/DrawerHeader";
 import { customAxios } from "../lib/customAxios";
-
-interface Report {
-  createdAt: string;
-  id: number;
-  reportContent: string;
-  reportTitle: string;
-  reportType: string;
-  updatedAt: string;
-  user: User;
-}
-interface User {
-  createdAt: string;
-  email: string;
-  nickname: string;
-  oAuthProvider: string;
-  oAuthProviderId: string;
-  updatedAt: string;
-}
+import { Report } from "../types/report";
 
 const ReportDetail = () => {
   const params = useParams();

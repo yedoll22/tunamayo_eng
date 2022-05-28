@@ -1,27 +1,12 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import Loading from "./Loading";
-
-interface Center {
-  lat: number;
-  lng: number;
-}
-
-interface CenterState {
-  center: Center;
-  isAllow: boolean;
-}
-
-interface CurrentLocationButtonProps {
-  setCenter: Dispatch<SetStateAction<CenterState>>;
-}
-
+import { CurrentLocationButtonProps } from "../types/map";
 const CurrentLocationButton = ({ setCenter }: CurrentLocationButtonProps) => {
   const [clickState, setClickState] = useState(false);
 
   const getCurrentLocation = async () => {
     setClickState(true);
     if (navigator.geolocation) {
-      // GeoLocation을 사용해서 사용자의 위치를 얻어온다.
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setCenter((prev) => ({
@@ -39,9 +24,7 @@ const CurrentLocationButton = ({ setCenter }: CurrentLocationButtonProps) => {
           setClickState(false);
         }
       );
-    }
-    // 사용자가 위치 동의 허용을 하지 않았을 때
-    else {
+    } else {
       setCenter((prev) => ({
         ...prev,
         isAllow: false,

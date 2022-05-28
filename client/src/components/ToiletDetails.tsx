@@ -1,9 +1,5 @@
 import { useState } from "react";
-import { IToilet } from "../lib/interfaces";
-
-interface ToiletDetailsProps {
-  toilet?: IToilet;
-}
+import { ToiletDetailsProps } from "../types/toilet";
 
 const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
   const [dropdown, setDropdown] = useState<Boolean>(false);

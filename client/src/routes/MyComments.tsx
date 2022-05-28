@@ -1,7 +1,7 @@
 import { customAxios } from "../lib/customAxios";
 import { useEffect, useState } from "react";
 import MyComment from "../components/MyComment";
-import { IComment } from "../lib/interfaces";
+import { IComment } from "../types/comment";
 import DrawerHeader from "../components/DrawerHeader";
 
 const MyComments = () => {

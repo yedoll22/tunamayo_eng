@@ -1,20 +1,22 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState, useRef } from "react";
 import { customAxios } from "../lib/customAxios";
 import DrawerHeader from "../components/DrawerHeader";
 import Modal from "../components/Modal";
 import Loading from "../components/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { displayModal } from "../slices/modalSlice";
+import { getQueryString } from "../lib/utils";
 
 const WriteReport = () => {
-  const ref = useRef<HTMLTextAreaElement | null>(null);
-  const location = useLocation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const queryString: string = location.search;
-  const reportType: string = queryString.split("=")[1];
-
+  const reportType = getQueryString();
+  const ref = useRef<HTMLTextAreaElement | null>(null);
+  const modal = useSelector<RootState>((state) => state.modal.value);
   const [reportTitle, setReportTitle] = useState("");
   const [reportContent, setReportContent] = useState("");
-  const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const postReport = async () => {
@@ -28,7 +30,7 @@ const WriteReport = () => {
       .then((res) => {
         if (res.status === 201) {
           setLoading(false);
-          setModal(true);
+          dispatch(displayModal());
         }
       });
   };
@@ -80,7 +82,6 @@ const WriteReport = () => {
       </div>
       {modal && (
         <Modal
-          setModal={setModal}
           title={
             reportType === "report"
               ? "제보 접수가 완료되었습니다!"

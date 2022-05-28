@@ -1,25 +1,7 @@
 import { useQuery } from "react-query";
 import { customAxios } from "../lib/customAxios";
-
-interface MapToiletList {
-  id: number;
-  toiletName: string;
-  latitude: number;
-  longitude: number;
-  roadName: string;
-}
-
-interface ToiletList {
-  id: number;
-  title: string;
-  latlng: Latlng;
-  roadName: string;
-}
-
-interface Latlng {
-  lat: number;
-  lng: number;
-}
+import { MapToiletList } from "../types/map";
+import { ToiletList } from "../types/toilet";
 
 const getAllToilets = async () => {
   return customAxios.get(`/toilets`).then((res) => {

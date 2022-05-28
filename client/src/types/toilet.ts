@@ -1,3 +1,5 @@
+import { Latlng } from "./map";
+
 export interface IToilet {
   agency?: string;
   agencyNumber?: string;
@@ -29,4 +31,32 @@ export interface IToilet {
   type?: string;
   updatedAt?: string;
   urinalCount?: number;
+}
+
+export interface ToiletInfoProps {
+  title: string;
+  roadName: string;
+  id: number;
+}
+
+export interface ToiletSummaryProps {
+  toilet?: IToilet;
+}
+
+export interface ToiletDetailsProps {
+  toilet?: IToilet;
+}
+
+export interface ToiletPosition {
+  id: number;
+  title: string;
+  roadName: string;
+  latlng: Latlng;
+}
+
+export interface ToiletList {
+  id: number;
+  title: string;
+  latlng: Latlng;
+  roadName: string;
 }

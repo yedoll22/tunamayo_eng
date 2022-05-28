@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { customAxios } from "../lib/customAxios";
-import { IToilet } from "../lib/interfaces";
+import { IToilet } from "../types/toilet";
 import Header from "./Header";
 import ToiletSummary from "./ToiletSummary";
 import ToiletDetails from "./ToiletDetails";
