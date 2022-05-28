@@ -1,7 +1,8 @@
-export interface PropsType {
+export interface ModalPopUpProps {
+  // 헐크수정
   toiletInfo: ToiletInfoProps;
   commentInfo: CommentInfoProps;
-  modalPopUp: boolean;
+  modalPopUp: "pop-up" | "pop-down" | "hidden";
 }
 
 export interface MyCommentProps {

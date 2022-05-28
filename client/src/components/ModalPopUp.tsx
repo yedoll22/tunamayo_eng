@@ -1,18 +1,25 @@
 import { useNavigate } from "react-router-dom";
-import { PropsType } from "../lib/interfaces";
+import { ModalPopUpProps } from "../lib/interfaces"; // 헐크수정
 
-const ModalPopUp = ({ toiletInfo, commentInfo, modalPopUp }: PropsType) => {
+// 헐크수정
+type ModalPopUpState = "hidden" | "pop-up" | "pop-down";
+
+const ModalPopUp = ({
+  toiletInfo,
+  commentInfo,
+  modalPopUp, // 헐크수정
+}: ModalPopUpProps) => {
   const navigate = useNavigate();
   const numberOfFilled = Math.floor(commentInfo.avg); // 꽉별 개수
   const numberOfHalfFilled = commentInfo.avg % 1 === 0 ? 0 : 1; // 반별 개수
   const numberOfNonFilled = 5 - (numberOfFilled + numberOfHalfFilled); // 빈별 개수
 
-  const modalClass = (modalPopUp: boolean) => {
-    if (modalPopUp)
-      // 스티븐 수정함 h-[199px] => h-[233px]
+  const modalClass = (modalPopUp: ModalPopUpState) => {
+    if (modalPopUp === "pop-up")
       return "animate-modalPopUp sticky bottom-0 w-full h-[233px] rounded-t-[20px] z-10 bg-[#FEFEFE] shadow-modalPopUp";
-    else
-      return "animate-modalPopDown transition-all hidden duration-[1700ms] sticky bottom-[-50%] w-full h-[199px] rounded-t-[20px] z-10 bg-[#FEFEFE] shadow-modalPopUp";
+    else if (modalPopUp === "pop-down")
+      return "animate-modalPopDown sticky bottom-0 w-full h-[233px] rounded-t-[20px] z-10 bg-[#FEFEFE] shadow-modalPopUp";
+    else return "hidden";
   };
 
   return (

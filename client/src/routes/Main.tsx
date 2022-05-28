@@ -1,6 +1,5 @@
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
 import ModalPopUp from "../components/ModalPopUp";
 import { customAxios } from "../lib/customAxios";
 import {
@@ -16,19 +15,10 @@ import Drawer from "../components/Drawer";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
-import { getAllToilets } from "../api";
+import { useAllToiletsQuery } from "../api/toilet";
 
-interface ToiletList {
-  id: number;
-  title: string;
-  latlng: Latlng;
-  roadName: string;
-}
-
-interface Latlng {
-  lat: number;
-  lng: number;
-}
+// 헐크수정
+type ModalPopUpState = "hidden" | "pop-up" | "pop-down";
 
 const Main = () => {
   const navigate = useNavigate();
@@ -42,8 +32,9 @@ const Main = () => {
     isAllow: false,
   });
 
-  const [loading, setLoading] = useState(true);
-  const [modalPopUp, setModalPopUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  // 헐크수정
+  const [modalPopUp, setModalPopUp] = useState<ModalPopUpState>("hidden");
   const [modal, setModal] = useState(false);
   const [create, setCreate] = useState(false);
   const [currentArea, setCurrentArea] = useState({
@@ -89,10 +80,7 @@ const Main = () => {
     else setCommentInfo({ length, avg });
   };
 
-  const { isLoading, data } = useQuery<ToiletList[]>(
-    "allToilets",
-    getAllToilets
-  );
+  const allToilets = useAllToiletsQuery();
 
   useEffect(() => {
     customAxios.get("/users").then((res) => setUserInfo(res.data.userInfo));
@@ -111,17 +99,17 @@ const Main = () => {
             },
             isAllow: true,
           }));
-          setLoading(false);
+          setIsLoading(false);
         },
         (err) => {
-          setLoading(false);
+          setIsLoading(false);
           console.log(err);
         }
       );
     }
     // 사용자가 위치 동의 허용을 하지 않았을 때
     else {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, []);
 
@@ -141,8 +129,8 @@ const Main = () => {
   // currentArea의 sw 위도 보다 크고, ne 위도 보다 작고, sw 경도보다 크고, ne 경도보다 작은 포지션 포함된 범위.
   // currentPositions에 그 범위를 담는다.
   const includePositions = () => {
-    if (data) {
-      const newPositions = [...data].filter((m) => {
+    if (allToilets.data) {
+      const newPositions = [...allToilets.data].filter((m) => {
         return (
           m.latlng.lat >= currentArea.sw.lat &&
           m.latlng.lat < currentArea.ne.lat &&
@@ -156,7 +144,7 @@ const Main = () => {
 
   useEffect(() => {
     includePositions();
-  }, [currentArea, data, center]);
+  }, [currentArea, allToilets.data, center]);
 
   return (
     <>
@@ -186,10 +174,14 @@ const Main = () => {
             changeCurrentArea(map);
           }}
           onClick={() => {
-            setModalPopUp(false);
+            // 헐크수정
+            setModalPopUp("pop-down");
+            setTimeout(() => {
+              setModalPopUp("hidden");
+            }, 1000);
           }}
         >
-          <SearchBar data={data} setCenter={setCenter} />
+          <SearchBar data={allToilets.data} setCenter={setCenter} />
           <NavButton setDrawer={setDrawer} />
           <CurrentLocationButton setCenter={setCenter} />
           {isLoading ? (
@@ -205,7 +197,8 @@ const Main = () => {
                   position={position.latlng} // 마커를 표시할 위치
                   // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
                   onClick={() => {
-                    setModalPopUp(true);
+                    // 헐크수정
+                    setModalPopUp("pop-up");
                     setToiletInfo(position);
                     commentRequest(position.id);
                   }}
