@@ -1,23 +1,18 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { customAxios } from "../lib/customAxios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutHandler } from "../slices/isLoginSlice";
-import { IUser } from "../lib/interfaces";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import Modal from "./Modal";
+import { RootState } from "../store/store";
+import { displayModal } from "../slices/modalSlice";
+import { DrawerProps } from "../types/common";
 
-interface DrawerProps {
-  drawer: boolean;
-  drawerClose: boolean;
-  userInfo: IUser | null;
-  setModal: Dispatch<SetStateAction<boolean>>;
-}
-
-const Drawer = ({ drawer, drawerClose, userInfo, setModal }: DrawerProps) => {
+const Drawer = ({ drawer, drawerClose, userInfo }: DrawerProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [logoutModal, setLogoutModal] = useState(false);
-
+  const logoutModal = useSelector<RootState>((state) => state.modal.value);
+  const [logoutState, setLogoutState] = useState<boolean>(false);
   const logoutRequest = async () => {
     const request = await customAxios.post("users/logout", {});
     if (request.status === 200) {
@@ -26,7 +21,6 @@ const Drawer = ({ drawer, drawerClose, userInfo, setModal }: DrawerProps) => {
     } else window.location.reload();
   };
 
-  //스티븐 수정함 pb-4 => pd-10
   const drawerClass = () => {
     if (drawerClose)
       return "animate-drawPopDown absolute top-0 left-0 z-50 w-[212px] h-full bg-white pl-4 pr-[17px] pt-[9px] pb-10 flex flex-col";
@@ -36,15 +30,16 @@ const Drawer = ({ drawer, drawerClose, userInfo, setModal }: DrawerProps) => {
 
   return (
     <>
-      {logoutModal && (
-        <Modal
-          title="로그아웃 하시겠습니까?"
-          left="취소"
-          right="로그아웃"
-          setModal={setLogoutModal}
-          action={logoutRequest}
-        />
-      )}
+      {logoutModal ? (
+        logoutState ? (
+          <Modal
+            title="로그아웃 하시겠습니까?"
+            left="취소"
+            right="로그아웃"
+            action={logoutRequest}
+          />
+        ) : null
+      ) : null}
 
       {drawer ? (
         <div className={drawerClass()}>
@@ -71,16 +66,17 @@ const Drawer = ({ drawer, drawerClose, userInfo, setModal }: DrawerProps) => {
             <div
               className="cursor-pointer"
               onClick={() => {
-                userInfo ? navigate("/my/comments") : setModal(true);
+                userInfo ? navigate("/my/comments") : dispatch(displayModal());
               }}
             >
-              {/* 스티븐 수정함 */}
               내가 쓴 리뷰
             </div>
             <div
               className="cursor-pointer"
               onClick={() => {
-                userInfo ? navigate("/report?type=report") : setModal(true);
+                userInfo
+                  ? navigate("/report?type=report")
+                  : dispatch(displayModal());
               }}
             >
               화장실 제보하기
@@ -88,7 +84,9 @@ const Drawer = ({ drawer, drawerClose, userInfo, setModal }: DrawerProps) => {
             <div
               className="cursor-pointer"
               onClick={() => {
-                userInfo ? navigate("/report?type=inquiry") : setModal(true);
+                userInfo
+                  ? navigate("/report?type=inquiry")
+                  : dispatch(displayModal());
               }}
             >
               1:1 문의
@@ -107,7 +105,11 @@ const Drawer = ({ drawer, drawerClose, userInfo, setModal }: DrawerProps) => {
           </div>
           <div
             onClick={() => {
-              userInfo ? setLogoutModal(true) : navigate("/login");
+              if (userInfo) {
+                setLogoutState(true);
+                dispatch(displayModal());
+                return;
+              } else navigate("/login");
             }}
             className="text-gray40 text-center font-normal text-base leading-[26px] w-full cursor-pointer"
           >

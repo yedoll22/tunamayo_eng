@@ -1,20 +1,6 @@
 import React, { useEffect, useState } from "react";
-
-interface Latlng {
-  lat: number;
-  lng: number;
-}
-interface ToiletPosition {
-  id: number;
-  title: string;
-  roadName: string;
-  latlng: Latlng;
-}
-
-interface SearchBarProps {
-  data?: ToiletPosition[];
-  setCenter: any;
-}
+import { ToiletPosition } from "../types/toilet";
+import { SearchBarProps } from "../types/common";
 
 const SearchBar = ({ data, setCenter }: SearchBarProps) => {
   const [matchingList, setMatchingList] = useState<ToiletPosition[]>([]);
@@ -137,25 +123,6 @@ const SearchBar = ({ data, setCenter }: SearchBarProps) => {
         </div>
       )}
     </>
-
-    // {matchingList.length ? (
-    //   <div className="w-full h-[100px] rounded-md shadow-search bg-white">
-    //     {matchingList.map((toilet, i) => {
-    //       return (
-    //         <div
-    //           key={i}
-    //           onClick={() => {
-    //             setCenter(toilet.latlng);
-    //             setMatchingList([]);
-    //           }}
-    //         >
-    //           <div>{toilet.title}</div>
-    //         </div>
-    //       );
-    //     })}
-    //     </div>
-    //   ) : null}
-    // </div>
   );
 };
 

@@ -56,7 +56,7 @@ const userController = {
   },
 
   signUp: async (req: Request, res: Response) => {
-    const { nickname, email, oAuthProvider, oAtuhId } = req.body;
+    const { nickname, email, oAuthProvider, oAuthId } = req.body;
     // 클라이언트에서 받아온 요청 바디 값들을 user 테이블에 insert한다.
 
     try {
@@ -72,7 +72,7 @@ const userController = {
         nickname,
         email,
         oAuthProvider,
-        oAuthProviderId: oAtuhId,
+        oAuthProviderId: oAuthId,
       });
 
       const payload = { id: insertQuery.identifiers[0].id };
@@ -142,11 +142,15 @@ const userController = {
           "Set-Cookie",
           `token=${tunaToken}; Path=/; Max-age=${maxAge};`
         );
-        return res.redirect("https://tunamayo-toilet.com");
+        // return res.redirect("https://tunamayo-toilet.com");
+        return res.redirect("http://localhost:3000");
       }
       // CASE2) 처음 가입하는 유저인 경우 -> 클라이언트의 가입 페이지로 리다이렉트 시켜줌.
+      // return res.redirect(
+      //   `https://tunamayo-toilet.com/signup?oauthprovider=kakao&oauthid=${kakaoOauthId}&email=${kakaoUserEmail}`
+      // );
       return res.redirect(
-        `https://tunamayo-toilet.com/signup?oauthprovider=kakao&oauthid=${kakaoOauthId}&email=${kakaoUserEmail}`
+        `http://localhost:3000/signup?oauthprovider=kakao&oauthid=${kakaoOauthId}&email=${kakaoUserEmail}`
       );
     } catch (err) {
       console.log(err);
@@ -213,11 +217,15 @@ const userController = {
           "Set-Cookie",
           `token=${tunaToken}; Path=/; Max-age=${maxAge};`
         );
-        return res.redirect("https://tunamayo-toilet.com");
+        // return res.redirect("https://tunamayo-toilet.com");
+        return res.redirect("http://localhost:3000");
       }
       // CASE2) 처음 가입하는 유저인 경우 -> 클라이언트의 가입 페이지로 리다이렉트 시켜줌.
+      // return res.redirect(
+      //   `https://tunamayo-toilet.com/signup?oauthprovider=google&oauthid=${googleOauthId}&email=${googleUserEmail}`
+      // );
       return res.redirect(
-        `https://tunamayo-toilet.com/signup?oauthprovider=google&oauthid=${googleOauthId}&email=${googleUserEmail}`
+        `http://localhost:3000/signup?oauthprovider=google&oauthid=${googleOauthId}&email=${googleUserEmail}`
       );
     } catch (err) {
       console.log(err);

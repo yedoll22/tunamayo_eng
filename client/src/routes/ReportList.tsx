@@ -1,33 +1,12 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import DrawerHeader from "../components/DrawerHeader";
 import Report from "../components/Report";
 import { customAxios } from "../lib/customAxios";
-
-interface IReport {
-  id: number;
-  reportTitle: string;
-  reportContent: string;
-  reportType: string;
-  userId: number;
-  createdAt: string;
-  updatedAt: string;
-  user: User;
-}
-
-interface User {
-  createdAt: string;
-  email: string;
-  nickname: string;
-  oAuthProvider: string;
-  oAuthProviderId: string;
-  updatedAt: string;
-}
+import { IReport } from "../types/report";
+import { getQueryString } from "../lib/utils";
 
 const ReportList = () => {
-  const location = useLocation();
-  const queryString: string = location.search;
-  const reportType: string = queryString.split("=")[1];
+  const reportType = getQueryString();
   const [reportList, setReportList] = useState<IReport[]>([]);
   const [page, setPage] = useState(1);
   const limit = 7;
@@ -95,7 +74,7 @@ const ReportList = () => {
         <div className="flex">
           {Array(numPages)
             .fill(0)
-            .map((_, i) => {
+            .map((_: number, i) => {
               if (i >= pageGroup * 5 && i <= pageGroup * 5 + 4) {
                 return (
                   <div

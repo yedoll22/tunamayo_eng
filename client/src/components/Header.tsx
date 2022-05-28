@@ -1,9 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { IToilet } from "../lib/interfaces";
-
-interface HeaderProps {
-  toilet?: IToilet;
-}
+import { HeaderProps } from "../types/common";
 
 const Header = ({ toilet }: HeaderProps) => {
   const navigate = useNavigate();
@@ -27,7 +23,6 @@ const Header = ({ toilet }: HeaderProps) => {
               <div> {toilet?.toiletName}</div>
             )}
           </div>
-          {/* 스티븐 수정함 */}
           <div className="py-1 text-sm text-gray80 text-center">
             {toilet?.roadName.includes("(") ? (
               <div>

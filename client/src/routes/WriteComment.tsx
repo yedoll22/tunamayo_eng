@@ -1,21 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DrawerHeader from "../components/DrawerHeader";
+import StarRating from "../components/StarRating";
 import { customAxios } from "../lib/customAxios";
+import { getQueryString } from "../lib/utils";
 
 const WriteComment = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const commentId = getQueryString();
   const ref = useRef<HTMLTextAreaElement | null>(null);
-  const queryString: string = location.search;
-  const commentId: string = queryString.split("=")[1];
   const { toiletId } = useParams();
   const [content, setContent] = useState<string>("");
   const [rating, setRating] = useState<number>(0);
-
-  const numberOfFilled = Math.floor(rating); // 꽉별 개수
-  const numberOfHalfFilled = rating % 1 === 0 ? 0 : 1; // 반별 개수
-  const numberOfNonFilled = 5 - (numberOfFilled + numberOfHalfFilled); // 빈별 개수
 
   useEffect(() => {
     if (commentId) {
@@ -68,39 +64,11 @@ const WriteComment = () => {
             />
             <div className="flex items-center">
               <div className="pt-4 pb-1 flex items-center space-x-5">
-                {Array(numberOfFilled)
-                  .fill(1)
-                  .map((_, i) => (
-                    <div key={i}>
-                      <img
-                        className="w-9 h-9"
-                        src="/images/star/star-filled-blue.svg"
-                        alt="filled"
-                      />
-                    </div>
-                  ))}
-                {Array(numberOfHalfFilled)
-                  .fill(1)
-                  .map((_, i) => (
-                    <div key={i}>
-                      <img
-                        className="w-9 h-9"
-                        src="/images/star/star-half-blue.svg"
-                        alt="half"
-                      />
-                    </div>
-                  ))}
-                {Array(numberOfNonFilled)
-                  .fill(1)
-                  .map((_, i) => (
-                    <div key={i}>
-                      <img
-                        className="w-9 h-9"
-                        src="/images/star/star-non-blue.svg"
-                        alt="non"
-                      />
-                    </div>
-                  ))}
+                <StarRating
+                  rating={rating}
+                  imgClass="w-9 h-9"
+                  starColor="blue"
+                />
               </div>
             </div>
           </div>

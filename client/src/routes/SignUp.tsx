@@ -1,20 +1,18 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { customAxios } from "../lib/customAxios";
+import { getQueryString } from "../lib/utils";
 
 const SignUp = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const [nickname, setNickname] = useState<string>("");
   const [nicknameMessage, setNicknameMessage] = useState<string>("");
   const [signupErrorMessage, setSignupErrorMessage] = useState<string>("");
   const [isNickname, setIsNickname] = useState<boolean>(false);
-  const queryString: string = location.search;
-  const oAuthProvider: string = queryString.split("&")[0].split("=")[1];
-  const oAtuhId: string = queryString.split("&")[1].split("=")[1];
-  const email: string = queryString.split("&")[2].split("=")[1];
+  const oAuthProvider = getQueryString(0);
+  const oAuthId = getQueryString(1);
+  const email = getQueryString(2);
 
-  // 스티븐 수정함 (FormEvent => ChangeEvent)
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nicknameRegex = /^[가-힣]{2,8}$/;
     const currentNickname = e.currentTarget.value;
@@ -30,15 +28,15 @@ const SignUp = () => {
   };
 
   const nicknameInputClass = () => {
-    // 유효성 검사 통과 && 닉네임 입력한 경우
+    const defaultClass =
+      "pl-4 box-border border-2 rounded-lg text-base font-normal w-full h-12 focus:outline-none";
     if (isNickname && nickname.length)
-      return "pl-4 box-border border-2 border-tnBlue rounded-lg text-base font-normal w-full h-12 focus:outline-none focus:border-tnBlue";
+      return defaultClass + " border-tnBlue focus:border-tnBlue";
     else if (!isNickname && nickname.length)
-      return "pl-4 box-border border-2 border-tnRed rounded-lg text-base font-normal w-full h-12 focus:outline-none focus: border-2";
+      return defaultClass + " border-tnRed focus:border-2";
     else if (!isNickname && !nickname.length)
-      return "pl-4 box-border border-2 border-[#D3D3D3] rounded-lg text-base font-normal w-full h-12 focus:outline-none focus:border-tnBlue";
-    else
-      return "pl-4 box-border border-2 border-[#D3D3D3] rounded-lg text-base font-normal w-full h-12 focus:outline-none focus:border-tnBlue";
+      return defaultClass + " border-gray20 focus:border-tnBlue";
+    else return defaultClass + " border-gray20 focus:border-tnBlue";
   };
 
   const signUpRequest = () => {
@@ -47,7 +45,7 @@ const SignUp = () => {
         nickname,
         email,
         oAuthProvider,
-        oAtuhId,
+        oAuthId,
       })
       .then((res) => {
         if (res.status === 201) navigate("/", { replace: true });
@@ -67,7 +65,6 @@ const SignUp = () => {
           <br />
           1초만에 화장실 찾기
         </div>
-        {/* 스티븐 수정함 form => div */}
         <div className="mx-4 relative mb-[129px]">
           <input
             value={nickname}

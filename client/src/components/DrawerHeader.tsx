@@ -1,14 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
-interface DrawerHeaderProps {
-  title: string;
-  isAdmin: boolean;
-  reportTitle?: string;
-  reportContent?: string;
-  content?: string;
-  rightNone?: boolean;
-  action?: () => void;
-}
+import { DrawerHeaderProps } from "../types/common";
 
 const DrawerHeader = ({
   title,

@@ -1,25 +1,17 @@
-import { Dispatch, SetStateAction } from "react";
-
-interface ModalProps {
-  setModal?: Dispatch<SetStateAction<boolean>>;
-  // 스티븐 수정함
-  setSignout?: Dispatch<SetStateAction<boolean>>;
-  title: string;
-  oneButton?: string;
-  left?: string;
-  right?: string;
-  action?: () => void;
-}
+import { useDispatch } from "react-redux";
+import { hideModal } from "../slices/modalSlice";
+import { ModalProps } from "../types/common";
 
 const Modal = ({
   setSignout,
-  setModal,
   action,
   title,
   oneButton,
   left,
   right,
 }: ModalProps) => {
+  const dispatch = useDispatch();
+
   const rightClass = () => {
     if (right === "탈퇴하기" || right === "삭제")
       return "cursor-pointer flex-1 bg-white rounded-br-[10px] text-tnRed py-4 text-center font-semibold";
@@ -38,7 +30,7 @@ const Modal = ({
           {oneButton ? (
             <div
               onClick={() => {
-                setModal!(false);
+                dispatch(hideModal());
                 action && action();
               }}
               className="cursor-pointer flex py-[13px] justify-center items-center font-semibold text-tnBlue"
@@ -49,8 +41,7 @@ const Modal = ({
             <div className="flex">
               <div
                 onClick={() => {
-                  setModal!(false);
-                  // 스티븐 수정함
+                  dispatch(hideModal());
                   setSignout!(false);
                 }}
                 className="cursor-pointer flex-1 bg-white rounded-bl-[10px] py-4 text-center text-tnBlack border-r border-[#C4C4C4]"
@@ -60,7 +51,7 @@ const Modal = ({
 
               <div
                 onClick={() => {
-                  action ? action() : setModal!(false);
+                  action ? action() : dispatch(hideModal());
                 }}
                 className={rightClass()}
               >
