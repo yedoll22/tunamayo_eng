@@ -107,7 +107,8 @@ const Comments = () => {
       {commentList.length > 3 && (
         <div
           onClick={() => setShowMore(!showMore)}
-          className="flex justify-center py-2 cursor-pointer"
+          // 스티븐 수정함 pb-6
+          className="flex justify-center pt-2 pb-6 cursor-pointer"
         >
           <div className="text-tnBlack font-normal text-base leading-[26px]">
             {showMore ? "접기" : "더보기"}

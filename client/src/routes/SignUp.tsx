@@ -14,7 +14,8 @@ const SignUp = () => {
   const oAtuhId: string = queryString.split("&")[1].split("=")[1];
   const email: string = queryString.split("&")[2].split("=")[1];
 
-  const onChangeNickname = (e: React.FormEvent<HTMLInputElement>) => {
+  // 스티븐 수정함 (FormEvent => ChangeEvent)
+  const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nicknameRegex = /^[가-힣]{2,8}$/;
     const currentNickname = e.currentTarget.value;
     setNickname(currentNickname);
@@ -66,7 +67,8 @@ const SignUp = () => {
           <br />
           1초만에 화장실 찾기
         </div>
-        <form className="mx-4 relative mb-[129px]">
+        {/* 스티븐 수정함 form => div */}
+        <div className="mx-4 relative mb-[129px]">
           <input
             value={nickname}
             onChange={onChangeNickname}
@@ -101,7 +103,7 @@ const SignUp = () => {
               {signupErrorMessage}
             </div>
           ) : null}
-        </form>
+        </div>
         <div className="px-4">
           <button
             className="text-[#222222] text-base leading-[26px] bg-tnBlue rounded-lg font-bold h-12 py-[11px] w-full"

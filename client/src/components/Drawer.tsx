@@ -26,11 +26,12 @@ const Drawer = ({ drawer, drawerClose, userInfo, setModal }: DrawerProps) => {
     } else window.location.reload();
   };
 
+  //스티븐 수정함 pb-4 => pd-10
   const drawerClass = () => {
     if (drawerClose)
-      return "animate-drawPopDown absolute top-0 left-0 z-50 w-[212px] h-full bg-white pl-4 pr-[17px] pt-[9px] pb-4 flex flex-col";
+      return "animate-drawPopDown absolute top-0 left-0 z-50 w-[212px] h-full bg-white pl-4 pr-[17px] pt-[9px] pb-10 flex flex-col";
     else
-      return "animate-drawPopUp absolute top-0 left-0 z-50 w-[212px] h-full bg-white pl-4 pr-[17px] pt-[9px] pb-4 flex flex-col";
+      return "animate-drawPopUp absolute top-0 left-0 z-50 w-[212px] h-full bg-white pl-4 pr-[17px] pt-[9px] pb-10 flex flex-col";
   };
 
   return (
@@ -73,7 +74,8 @@ const Drawer = ({ drawer, drawerClose, userInfo, setModal }: DrawerProps) => {
                 userInfo ? navigate("/my/comments") : setModal(true);
               }}
             >
-              내가 쓴 댓글
+              {/* 스티븐 수정함 */}
+              내가 쓴 리뷰
             </div>
             <div
               className="cursor-pointer"

@@ -9,7 +9,8 @@ const ModalPopUp = ({ toiletInfo, commentInfo, modalPopUp }: PropsType) => {
 
   const modalClass = (modalPopUp: boolean) => {
     if (modalPopUp)
-      return "animate-modalPopUp sticky bottom-0 w-full h-[199px] rounded-t-[20px] z-10 bg-[#FEFEFE] shadow-modalPopUp";
+      // 스티븐 수정함 h-[199px] => h-[233px]
+      return "animate-modalPopUp sticky bottom-0 w-full h-[233px] rounded-t-[20px] z-10 bg-[#FEFEFE] shadow-modalPopUp";
     else
       return "animate-modalPopDown transition-all hidden duration-[1700ms] sticky bottom-[-50%] w-full h-[199px] rounded-t-[20px] z-10 bg-[#FEFEFE] shadow-modalPopUp";
   };
@@ -21,7 +22,8 @@ const ModalPopUp = ({ toiletInfo, commentInfo, modalPopUp }: PropsType) => {
           <div className="p-1 font-medium text-xl leading-8 text-tnBlack">
             {toiletInfo.title}
           </div>
-          <div className="p-1 font-normal text-base leading-[26px] text-gray80">
+          {/* 스티븐 수정함 h-[68px] */}
+          <div className="p-1 h-[68px] font-normal text-base leading-[26px] text-gray80">
             {toiletInfo.roadName}
           </div>
           <div className="flex p-1 space-x-[3px] items-center">

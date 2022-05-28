@@ -1,7 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
 
 interface ModalProps {
-  setModal: Dispatch<SetStateAction<boolean>>;
+  setModal?: Dispatch<SetStateAction<boolean>>;
+  // 스티븐 수정함
+  setSignout?: Dispatch<SetStateAction<boolean>>;
   title: string;
   oneButton?: string;
   left?: string;
@@ -10,6 +12,7 @@ interface ModalProps {
 }
 
 const Modal = ({
+  setSignout,
   setModal,
   action,
   title,
@@ -35,7 +38,7 @@ const Modal = ({
           {oneButton ? (
             <div
               onClick={() => {
-                setModal(false);
+                setModal!(false);
                 action && action();
               }}
               className="cursor-pointer flex py-[13px] justify-center items-center font-semibold text-tnBlue"
@@ -45,7 +48,11 @@ const Modal = ({
           ) : (
             <div className="flex">
               <div
-                onClick={() => setModal(false)}
+                onClick={() => {
+                  setModal!(false);
+                  // 스티븐 수정함
+                  setSignout!(false);
+                }}
                 className="cursor-pointer flex-1 bg-white rounded-bl-[10px] py-4 text-center text-tnBlack border-r border-[#C4C4C4]"
               >
                 {left}
@@ -53,7 +60,7 @@ const Modal = ({
 
               <div
                 onClick={() => {
-                  action ? action() : setModal(false);
+                  action ? action() : setModal!(false);
                 }}
                 className={rightClass()}
               >
