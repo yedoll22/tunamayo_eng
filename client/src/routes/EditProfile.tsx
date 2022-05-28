@@ -17,6 +17,8 @@ const EditProfile = () => {
   const [signout, setSignout] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [nicknameMessage, setNicknameMessage] = useState<string>("");
+  const [isNickname, setIsNickname] = useState<boolean>(false);
 
   const changeNickname = async () => {
     await customAxios
@@ -34,6 +36,34 @@ const EditProfile = () => {
           setModal(true);
         }
       });
+  };
+
+  const onChangeValue = (e: React.FormEvent<HTMLInputElement>) => {
+    const nicknameRegex = /^[가-힣]{2,8}$/;
+    const currentNickname = e.currentTarget.value;
+    setValue(currentNickname);
+
+    if (!nicknameRegex.test(currentNickname)) {
+      setNicknameMessage("닉네임은 공백없이 2~8자 국문으로 설정 가능합니다.");
+      setIsNickname(false);
+    } else {
+      setNicknameMessage("사용가능한 닉네임을 입력하셨습니다");
+      setIsNickname(true);
+    }
+  };
+
+  const nicknameInputClass = () => {
+    // 유효성 검사 통과 && 닉네임 입력한 경우
+    if (value === nickname)
+      return "w-full h-12 py-[10px] rounded-md border border-gray20 outline-none px-3 text-center font-noraml text-base leading-[26px] mb-2 focus:border-2";
+    else if (isNickname && value.length)
+      return "w-full h-12 py-[10px] rounded-md border border-tnBlue outline-none px-3 text-center font-noraml text-base leading-[26px] mb-2 focus:border-2";
+    else if (!isNickname && value.length)
+      return "w-full h-12 py-[10px] rounded-md border border-tnRed outline-none px-3 text-center font-noraml text-base leading-[26px] mb-2 focus:border-2";
+    else if (!isNickname && !value.length)
+      return "w-full h-12 py-[10px] rounded-md border border-gray20 outline-none px-3 text-center font-noraml text-base leading-[26px] mb-2 focus:border-2";
+    else
+      return "w-full h-12 py-[10px] rounded-md border border-gray20 outline-none px-3 text-center font-noraml text-base leading-[26px] mb-2 focus:border-2";
   };
 
   const secessionRequest = async () => {
@@ -60,16 +90,40 @@ const EditProfile = () => {
           <img src="/images/main/profile-icon.svg" alt="profile-icon" />
         </div>
 
-        <input
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-          className="w-full h-12 py-[10px] rounded-md border border-gray20 outline-none px-3 text-center mb-2"
-          type="text"
-        />
-
-        <div className="font-normal text-sm leading-[22px] text-gray20">
-          닉네임을 수정해 주세요
+        <div className="w-full relative">
+          <input
+            onChange={onChangeValue}
+            value={value}
+            className={nicknameInputClass()}
+            type="text"
+          />
+          {nickname.length > 0 ? (
+            <img
+              onClick={() => {
+                setValue("");
+              }}
+              className="cursor-pointer absolute right-3 top-3.5 z-10"
+              src="/images/common/delete.svg"
+              alt="clear-button"
+            />
+          ) : null}
         </div>
+
+        {value === nickname || !value.length ? (
+          <div className="font-normal text-sm leading-[22px] text-gray40 mb-[434px]">
+            닉네임을 수정해 주세요
+          </div>
+        ) : value.length ? (
+          <span
+            className={
+              isNickname
+                ? "font-normal text-sm leading-[22px] text-tnBlue mb-[434px]"
+                : "font-normal text-sm leading-[22px] text-tnRed mb-[434px]"
+            }
+          >
+            {nicknameMessage}
+          </span>
+        ) : null}
       </div>
       {/* 스티븐 수정함 */}
       <div
@@ -77,7 +131,7 @@ const EditProfile = () => {
           setModalTitle("정말 탈퇴하시겠습니까");
           setSignout(true);
         }}
-        className="w-full text-center cursor-pointer font-normal text-sm leading-[22px] text-gray20"
+        className="font-normal text-base text-gray40 text-center leading-[26px]"
       >
         회원탈퇴
       </div>
