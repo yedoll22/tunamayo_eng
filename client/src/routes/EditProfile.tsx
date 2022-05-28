@@ -1,7 +1,10 @@
 import DrawerHeader from "../components/DrawerHeader";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { customAxios } from "../lib/customAxios";
+import { useDispatch } from "react-redux";
+import { logoutHandler } from "../slices/isLoginSlice";
+
 import Modal from "../components/Modal";
 
 const EditProfile = () => {
@@ -11,6 +14,9 @@ const EditProfile = () => {
   const [value, setValue] = useState(nickname);
   const [modal, setModal] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
+  const [signout, setSignout] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const changeNickname = async () => {
     await customAxios
@@ -22,11 +28,24 @@ const EditProfile = () => {
         }
       })
       .catch((err) => {
-        if (err.response.status === 401) {
+        // 스티븐 수정함 401 => 409
+        if (err.response.status === 409) {
           setModalTitle("이미 존재하는 닉네임입니다!");
           setModal(true);
         }
       });
+  };
+
+  const secessionRequest = async () => {
+    await customAxios
+      .delete("/users")
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(logoutHandler());
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -52,8 +71,29 @@ const EditProfile = () => {
           닉네임을 수정해 주세요
         </div>
       </div>
+      {/* 스티븐 수정함 */}
+      <div
+        onClick={() => {
+          setModalTitle("정말 탈퇴하시겠습니까");
+          setSignout(true);
+        }}
+        className="w-full text-center cursor-pointer font-normal text-sm leading-[22px] text-gray20"
+      >
+        회원탈퇴
+      </div>
       {modal && (
         <Modal setModal={setModal} title={modalTitle} oneButton="확인" />
+      )}
+      {/* 스티븐 수정함 */}
+      {signout && (
+        <Modal
+          setModal={setModal}
+          setSignout={setSignout}
+          title={modalTitle}
+          left="취소"
+          right="탈퇴하기"
+          action={secessionRequest}
+        />
       )}
     </div>
   );

@@ -247,10 +247,11 @@ const userController = {
     const userId = req.userId;
 
     try {
-      await DB.manager.delete(Comment, { id: userId });
+      await DB.manager.delete(Comment, { userId });
       await DB.manager.delete(Like, { userId });
       await DB.manager.delete(Report, { userId });
       await DB.manager.delete(User, { id: userId });
+      res.clearCookie("token");
 
       return res.sendStatus(200);
     } catch (err) {

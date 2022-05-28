@@ -27,7 +27,17 @@ const Header = ({ toilet }: HeaderProps) => {
               <div> {toilet?.toiletName}</div>
             )}
           </div>
-          <div className="py-1 text-sm text-gray80">{toilet?.roadName}</div>
+          {/* 스티븐 수정함 */}
+          <div className="py-1 text-sm text-gray80 text-center">
+            {toilet?.roadName.includes("(") ? (
+              <div>
+                <div>{toilet?.roadName.split("(")[0]}</div>
+                <div>({toilet?.roadName.split("(")[1]}</div>
+              </div>
+            ) : (
+              <div> {toilet?.roadName}</div>
+            )}
+          </div>
         </div>
 
         <div className="w-6 h-6"></div>
