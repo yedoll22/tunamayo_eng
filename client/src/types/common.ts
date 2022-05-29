@@ -15,7 +15,7 @@ export type ModalPopUpState = "hidden" | "pop-up" | "pop-down";
 export interface DrawerProps {
   drawer: boolean;
   drawerClose: boolean;
-  userInfo: IUser | null;
+  // userInfo: IUser | null;
 }
 
 export interface DrawerHeaderProps {
@@ -55,7 +55,7 @@ export interface NavProps {
   setDrawer: Dispatch<SetStateAction<boolean>>;
 }
 
-export interface SearchBarProps {
-  data?: ToiletPosition[];
-  setCenter: any;
-}
+// export interface SearchBarProps {
+//   data?: ToiletPosition[];
+//   setCenter: any;
+// }
