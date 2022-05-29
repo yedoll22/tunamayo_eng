@@ -10,9 +10,9 @@ export interface CenterState {
   isAllow: boolean;
 }
 
-export interface CurrentLocationButtonProps {
-  setCenter: Dispatch<SetStateAction<CenterState>>;
-}
+// export interface CurrentLocationButtonProps {
+//   setCenter: Dispatch<SetStateAction<CenterState>>;
+// }
 
 export interface Latlng {
   lat: number;

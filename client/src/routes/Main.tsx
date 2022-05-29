@@ -17,6 +17,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { offSplash } from "../slices/splashSlice";
 import { ModalPopUpState } from "../types/common";
+import { useUserInfoQuery } from "../api/user";
+import { pauseGeoLocationApi } from "../slices/callGeoApiSlice";
+import { changeCenter } from "../slices/mapCenterSlice";
+import { changeLocationAllow } from "../slices/locationAllowSlice";
+import { changeCurrentLocation } from "../slices/currentLocationSlice";
+
+interface Center {
+  lat: number;
+  lng: number;
+}
 
 const Main = () => {
   // useEffect(() => {
@@ -25,17 +35,28 @@ const Main = () => {
   //   }, 3000);
   // }, []);
   const modal = useSelector<RootState>((state) => state.modal.value);
+  const callGeoLocationApi = useSelector<RootState>(
+    (state) => state.callGeoApi.value
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState<IUser | null>(null);
+  // const [userInfo, setUserInfo] = useState<IUser | null>(null);
   const splash = useSelector<RootState>((state) => state.splash.value);
-  const [center, setCenter] = useState({
-    center: {
-      lat: 37.5697,
-      lng: 126.982,
-    },
-    isAllow: false,
-  });
+  const center = useSelector<RootState, Center>((state) => state.center.value);
+  const currentLocation = useSelector<RootState, Center>(
+    (state) => state.currentLocation.value
+  );
+  const locationAllow = useSelector<RootState>(
+    (state) => state.locationAllow.value
+  );
+
+  // const [center, setCenter] = useState({
+  //   center: {
+  //     lat: 37.5697,
+  //     lng: 126.982,
+  //   },
+  //   isAllow: false,
+  // });
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -85,28 +106,42 @@ const Main = () => {
   };
 
   const allToilets = useAllToiletsQuery();
+  // const userInfo = useUserInfoQuery();
+
+  // useEffect(() => {
+  //   customAxios.get("/users").then((res) => setUserInfo(res.data.userInfo));
+  // }, []);
 
   useEffect(() => {
-    customAxios.get("/users").then((res) => setUserInfo(res.data.userInfo));
-  }, []);
-
-  useEffect(() => {
-    if (navigator.geolocation) {
+    if (navigator.geolocation && callGeoLocationApi) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setCenter((prev) => ({
-            ...prev,
-            center: {
+          dispatch(
+            changeCenter({
               lat: position.coords.latitude,
               lng: position.coords.longitude,
-            },
-            isAllow: true,
-          }));
+            })
+          );
+          dispatch(
+            changeCurrentLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            })
+          );
+          dispatch(changeLocationAllow(true));
+          // setCenter((prev) => ({
+          //   ...prev,
+          //   center: {
+          //     lat: position.coords.latitude,
+          //     lng: position.coords.longitude,
+          //   },
+          //   isAllow: true,
+          // }));
           setIsLoading(false);
+          dispatch(pauseGeoLocationApi());
         },
         (err) => {
           setIsLoading(false);
-          console.log(err);
         }
       );
     } else {
@@ -171,7 +206,7 @@ const Main = () => {
             ) : null}
 
             <Map
-              center={center.center}
+              center={center}
               className="w-full h-[100vh] z-0"
               level={2}
               maxLevel={4}
@@ -197,46 +232,49 @@ const Main = () => {
                 }, 1000);
               }}
             >
-              <SearchBar data={allToilets.data} setCenter={setCenter} />
-              <NavButton setDrawer={setDrawer} />
-              <CurrentLocationButton setCenter={setCenter} />
-              {isLoading ? (
-                <Loading content="현재 위치 불러 오는 중" />
-              ) : (
-                <MarkerClusterer averageCenter={true} minLevel={4}>
-                  {currentPositions.map((position, index) => (
-                    <MapMarker
-                      key={position.id}
-                      position={position.latlng}
-                      onClick={() => {
-                        setModalPopUp("pop-up");
-                        setToiletInfo(position);
-                        commentRequest(position.id);
-                      }}
-                      image={{
-                        src: "/images/main/marker-icon.png",
-                        size: { width: 24, height: 32 },
-                      }}
-                    />
-                  ))}
-                </MarkerClusterer>
-              )}
-              {center.isAllow && (
-                <MapMarker
-                  key="current-location"
-                  position={center.center}
-                  image={{
-                    src: "/images/main/current-marker.png",
-                    size: { width: 48, height: 57.78 },
-                  }}
-                />
-              )}
+              <>
+                {/* setCenter Props, data props 삭제 from SearchBar, CurrentLocationButton */}
+                <SearchBar />
+                <NavButton setDrawer={setDrawer} />
+                <CurrentLocationButton />
+                {isLoading ? (
+                  <Loading content="현재 위치 불러 오는 중" />
+                ) : (
+                  <MarkerClusterer averageCenter={true} minLevel={4}>
+                    {currentPositions.map((position, index) => (
+                      <MapMarker
+                        key={position.id}
+                        position={position.latlng}
+                        onClick={() => {
+                          setModalPopUp("pop-up");
+                          setToiletInfo(position);
+                          commentRequest(position.id);
+                        }}
+                        image={{
+                          src: "/images/main/marker-icon.png",
+                          size: { width: 24, height: 32 },
+                        }}
+                      />
+                    ))}
+                  </MarkerClusterer>
+                )}
+                {locationAllow && (
+                  <MapMarker
+                    key="current-location"
+                    position={currentLocation}
+                    image={{
+                      src: "/images/main/current-marker.png",
+                      size: { width: 48, height: 57.78 },
+                    }}
+                  />
+                )}
 
-              <ModalPopUp
-                modalPopUp={modalPopUp}
-                commentInfo={commentInfo}
-                toiletInfo={toiletInfo}
-              />
+                <ModalPopUp
+                  modalPopUp={modalPopUp}
+                  commentInfo={commentInfo}
+                  toiletInfo={toiletInfo}
+                />
+              </>
             </Map>
             {modal && (
               <Modal
@@ -249,7 +287,7 @@ const Main = () => {
             <Drawer
               drawer={drawer}
               drawerClose={drawerClose}
-              userInfo={userInfo}
+              // userInfo={userInfo?.data}
             />
           </>
         </div>

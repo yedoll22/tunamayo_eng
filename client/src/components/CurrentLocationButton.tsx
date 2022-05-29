@@ -1,7 +1,13 @@
 import { useState } from "react";
 import Loading from "./Loading";
-import { CurrentLocationButtonProps } from "../types/map";
-const CurrentLocationButton = ({ setCenter }: CurrentLocationButtonProps) => {
+// import { CurrentLocationButtonProps } from "../types/map";
+import { useDispatch } from "react-redux";
+import { changeCenter } from "../slices/mapCenterSlice";
+import { changeLocationAllow } from "../slices/locationAllowSlice";
+import { changeCurrentLocation } from "../slices/currentLocationSlice";
+
+const CurrentLocationButton = () => {
+  const dispatch = useDispatch();
   const [clickState, setClickState] = useState(false);
 
   const getCurrentLocation = async () => {
@@ -9,14 +15,26 @@ const CurrentLocationButton = ({ setCenter }: CurrentLocationButtonProps) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setCenter((prev) => ({
-            ...prev,
-            center: {
+          dispatch(
+            changeCenter({
               lat: position.coords.latitude,
               lng: position.coords.longitude,
-            },
-            isAllow: true,
-          }));
+            })
+          );
+          dispatch(
+            changeCurrentLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            })
+          );
+          // setCenter((prev) => ({
+          //   ...prev,
+          //   center: {
+          //     lat: position.coords.latitude,
+          //     lng: position.coords.longitude,
+          //   },
+          //   isAllow: true,
+          // }));
           setClickState(false);
         },
         (err) => {
@@ -25,11 +43,11 @@ const CurrentLocationButton = ({ setCenter }: CurrentLocationButtonProps) => {
         }
       );
     } else {
-      setCenter((prev) => ({
-        ...prev,
-        isAllow: false,
-      }));
-      console.log("-");
+      dispatch(changeLocationAllow(false));
+      // setCenter((prev) => ({
+      //   ...prev,
+      //   isAllow: false,
+      // }));
     }
   };
 

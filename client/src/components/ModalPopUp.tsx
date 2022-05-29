@@ -10,10 +10,11 @@ const ModalPopUp = ({
   const navigate = useNavigate();
 
   const modalClass = (modalPopUp: ModalPopUpState) => {
-    if (modalPopUp === "pop-up")
-      return "animate-modalPopUp sticky bottom-0 w-full h-[205px] rounded-t-[20px] z-10 bg-[#FEFEFE] shadow-modalPopUp";
+    const defaultClass =
+      "sticky bottom-0 w-full h-[205px] rounded-t-[20px] z-10 bg-[#FEFEFE] shadow-modalPopUp ";
+    if (modalPopUp === "pop-up") return defaultClass + "animate-modalPopUp";
     else if (modalPopUp === "pop-down")
-      return "animate-modalPopDown sticky bottom-0 w-full h-[205px] rounded-t-[20px] z-10 bg-[#FEFEFE] shadow-modalPopUp";
+      return defaultClass + "animate-modalPopDown";
     else return "hidden";
   };
 

@@ -1,24 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IComment } from "../types/comment";
 import Comment from "./Comment";
-import { customAxios } from "../lib/customAxios";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "./Modal";
 import { RootState } from "../store/store";
 import { displayModal } from "../slices/modalSlice";
 import { useAllCommentsQuery } from "../api/comment";
+import { useTokenValidationQuery } from "../api/user";
 
 const Comments = () => {
   const navigate = useNavigate();
-  const isLogin = useSelector<any>((state) => state.isLogin.value);
+  const dispatch = useDispatch();
+  const { toiletId } = useParams();
+  const userInfo = useTokenValidationQuery();
+  // const isLogin = useSelector<any>((state) => state.isLogin.value);
   // const [commentList, setCommentList] = useState<IComment[]>([]);
   const [deleteState, setDeleteState] = useState<boolean>(false);
   const [postState, setPostState] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
   const loginModal = useSelector<RootState>((state) => state.modal.value);
-  const dispatch = useDispatch();
-  const { toiletId } = useParams();
 
   // const commentRequest = async () => {
   //   const request = await customAxios.get(`/toilets/${toiletId}/comments`);
@@ -27,20 +28,20 @@ const Comments = () => {
   //   setCommentList(commentList);
   // };
 
-  const allComments = useAllCommentsQuery(toiletId);
-  console.log("list", allComments);
+  const allComments = useAllCommentsQuery(Number(toiletId));
 
   const writeCommentHandler = () => {
-    if (isLogin) navigate(`/toilet/${toiletId}/comment`);
-    else if (!isLogin) {
+    if (userInfo?.data) navigate(`/toilet/${toiletId}/comment`);
+    else if (!userInfo?.data) {
       setPostState(true);
       dispatch(displayModal());
     }
+    // if (isLogin) navigate(`/toilet/${toiletId}/comment`);
+    // else if (!isLogin) {
+    //   setPostState(true);
+    //   dispatch(displayModal());
+    // }
   };
-
-  // useEffect(() => {
-  //   commentRequest();
-  // }, [deleteState]);
 
   return (
     <div>
@@ -66,23 +67,23 @@ const Comments = () => {
             글쓰기
           </button>
         </div>
-
-        {[...allComments.data].slice(0, 3).map((comment: IComment) => {
-          return (
-            <Comment
-              key={comment.id}
-              commentId={comment.id}
-              toiletId={comment.toiletId}
-              userId={comment.userId}
-              content={comment.content}
-              nickname={comment.nickname}
-              rating={comment.rating}
-              createdAt={comment.createdAt}
-              deleteState={deleteState}
-              setDeleteState={setDeleteState}
-            />
-          );
-        })}
+        {allComments.data &&
+          [...allComments.data].slice(0, 3).map((comment: IComment) => {
+            return (
+              <Comment
+                key={comment.id}
+                commentId={comment.id}
+                toiletId={comment.toiletId}
+                userId={comment.userId}
+                content={comment.content}
+                nickname={comment.nickname}
+                rating={comment.rating}
+                createdAt={comment.createdAt}
+                deleteState={deleteState}
+                setDeleteState={setDeleteState}
+              />
+            );
+          })}
 
         {showMore &&
           [...allComments.data]

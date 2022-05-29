@@ -6,7 +6,9 @@ import { RootState } from "../store/store";
 import Modal from "./Modal";
 import StarRating from "./StarRating";
 import { CommentProps } from "../types/comment";
-import { useDeleteComment, useUserInfoQuery } from "../api/comment";
+import { useDeleteComment } from "../api/comment";
+import { useQueryClient } from "react-query";
+import { useTokenValidationQuery } from "../api/user";
 
 const Comment = ({
   content,
@@ -23,21 +25,27 @@ const Comment = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const deleteModal = useSelector<RootState>((state) => state.modal.value);
-  const userInfo = useUserInfoQuery();
+  const userInfo = useTokenValidationQuery();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (userInfo?.data?.status === 200 && userInfo?.data?.id === userId)
       setIsMine(true);
   }, [userId, userInfo]);
-  const deleteComment = useDeleteComment(toiletId, commentId);
-  const deleteHandler = async () => {
-    console.log("deleteState1 : ", deleteState);
-    deleteComment.mutate();
+
+  const deleteComment = useDeleteComment();
+  const deleteHandler = () => {
+    deleteComment.mutate(
+      { toiletId, commentId },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["allComments", toiletId]);
+        },
+      }
+    );
     setDeleteState(true);
-    console.log("deleteState2 : ", deleteState);
     dispatch(hideModal());
     setDeleteState(false);
-    console.log("deleteState3 : ", deleteState);
   };
 
   return (

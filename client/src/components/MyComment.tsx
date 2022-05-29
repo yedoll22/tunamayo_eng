@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { IToilet } from "../types/toilet";
 import { useNavigate } from "react-router-dom";
 import StarRating from "./StarRating";
+import { useToiletQuery } from "../api/toilet";
 
 const MyComment = ({
   content,
@@ -12,16 +13,18 @@ const MyComment = ({
   toiletId,
 }: MyCommentProps) => {
   const navigate = useNavigate();
-  const [toilet, setToilet] = useState<IToilet>();
-  const toiletRequest = async () => {
-    const request = await customAxios.get(`/toilets/${toiletId}`);
-    const { toiletInfo } = request.data;
-    setToilet(toiletInfo);
-  };
+  const toiletInfo = useToiletQuery(toiletId);
 
-  useEffect(() => {
-    toiletRequest();
-  }, []);
+  // const [toilet, setToilet] = useState<IToilet>();
+  // const toiletRequest = async () => {
+  //   const request = await customAxios.get(`/toilets/${toiletId}`);
+  //   const { toiletInfo } = request.data;
+  //   setToilet(toiletInfo);
+  // };
+
+  // useEffect(() => {
+  //   toiletRequest();
+  // }, []);
 
   return (
     <div className="py-4 px-5 border-b border-[#F6F6F6]">
@@ -38,10 +41,10 @@ const MyComment = ({
 
       <div className="flex justify-between font-normal text-sm leading-[22px] text-gray40">
         <div
-          onClick={() => navigate(`/toilet/${toilet?.id}`)}
+          onClick={() => navigate(`/toilet/${toiletInfo?.data?.id}`)}
           className="cursor-pointer"
         >
-          {toilet?.toiletName}
+          {toiletInfo?.data?.toiletName}
         </div>
         <div>{createdAt.split("T")[0]}</div>
       </div>

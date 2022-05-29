@@ -20,3 +20,12 @@ const getAllToilets = async () => {
 
 export const useAllToiletsQuery = () =>
   useQuery<ToiletList[]>("allToilets", getAllToilets);
+
+const getToiletById = (toiletId: number) => {
+  return customAxios.get(`toilets/${toiletId}`);
+};
+
+export const useToiletQuery = (toiletId: number) =>
+  useQuery(["toilet", toiletId], () => getToiletById(toiletId), {
+    select: (res) => res.data.toiletInfo,
+  });

@@ -21,6 +21,7 @@ const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
           alt="dropdown-opened"
         ></img>
       </div>
+
       {dropdown ? (
         <div className="origin-center animate-dropdown pt-3 pl-5 pb-[42px] pr-[25px] bg-[#F6F6F6] text-tnBlack font-normal text-base leading-[26px]">
           <div className="flex">

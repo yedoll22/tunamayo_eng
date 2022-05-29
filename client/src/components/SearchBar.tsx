@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ToiletPosition } from "../types/toilet";
-import { SearchBarProps } from "../types/common";
+// import { SearchBarProps } from "../types/common";
+import { useDispatch } from "react-redux";
+import { changeCenter } from "../slices/mapCenterSlice";
+import { useAllToiletsQuery } from "../api/toilet";
 
-const SearchBar = ({ data, setCenter }: SearchBarProps) => {
+const SearchBar = () => {
+  const dispatch = useDispatch();
+  const allToilets = useAllToiletsQuery();
+
   const [matchingList, setMatchingList] = useState<ToiletPosition[]>([]);
   const [keyword, setKeyword] = useState("");
   const [searchOverlay, setSearchOverlay] = useState<boolean>(false);
@@ -11,9 +17,22 @@ const SearchBar = ({ data, setCenter }: SearchBarProps) => {
     setKeyword(e.target.value);
   };
 
+  // useMemo(() => {
+  //   if (keyword.length && allToilets?.data) {
+  //     const filteredToilet = [...allToilets.data].filter((toilet) => {
+  //       return (
+  //         toilet.roadName.includes(keyword) || toilet.title.includes(keyword)
+  //       );
+  //     });
+  //     setMatchingList(filteredToilet);
+  //   } else {
+  //     setMatchingList([]);
+  //   }
+  // }, [keyword]);
+
   useEffect(() => {
-    if (keyword.length && data) {
-      const filteredToilet = [...data].filter((toilet) => {
+    if (keyword.length && allToilets?.data) {
+      const filteredToilet = [...allToilets.data].filter((toilet) => {
         return (
           toilet.roadName.includes(keyword) || toilet.title.includes(keyword)
         );
@@ -65,7 +84,8 @@ const SearchBar = ({ data, setCenter }: SearchBarProps) => {
                   <div
                     key={i}
                     onClick={() => {
-                      setCenter({ center: toilet.latlng, isAllow: false });
+                      dispatch(changeCenter(toilet.latlng));
+                      // setCenter({ center: toilet.latlng, isAllow: false });
                       setKeyword(toilet.title);
                       setSearchOverlay(false);
                       setMatchingList([]);
