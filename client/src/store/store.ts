@@ -5,6 +5,7 @@ import isLoginSlice from "../slices/isLoginSlice";
 import locationAllowSlice from "../slices/locationAllowSlice";
 import mapCenterSlice from "../slices/mapCenterSlice";
 import modalSlice from "../slices/modalSlice";
+import redirectPathSlice from "../slices/redirectPathSlice";
 import splashSlice from "../slices/splashSlice";
 
 export const store = configureStore({
@@ -16,6 +17,7 @@ export const store = configureStore({
     center: mapCenterSlice,
     locationAllow: locationAllowSlice,
     currentLocation: currentLocationSlice,
+    redirectPath: redirectPathSlice,
   },
 });
 

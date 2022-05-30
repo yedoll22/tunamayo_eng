@@ -89,7 +89,9 @@ const userController = {
 
   kakaoLogin: async (req: Request, res: Response) => {
     // 카카오 OAuth 페이지에서 동의 완료 후 redirect되는 api
+    const redirectPath = req.query?.state;
     const code = req.query?.code;
+
     if (!code) return res.status(403).json({ message: "oauth code not found" });
 
     try {
@@ -143,14 +145,15 @@ const userController = {
           `token=${tunaToken}; Path=/; Max-age=${maxAge};`
         );
         // return res.redirect("https://tunamayo-toilet.com");
-        return res.redirect("http://localhost:3000");
+        return res.redirect(301, `http://localhost:3000${redirectPath}`);
       }
       // CASE2) 처음 가입하는 유저인 경우 -> 클라이언트의 가입 페이지로 리다이렉트 시켜줌.
       // return res.redirect(
       //   `https://tunamayo-toilet.com/signup?oauthprovider=kakao&oauthid=${kakaoOauthId}&email=${kakaoUserEmail}`
       // );
       return res.redirect(
-        `http://localhost:3000/signup?oauthprovider=kakao&oauthid=${kakaoOauthId}&email=${kakaoUserEmail}`
+        301,
+        `http://localhost:3000/signup?oauthprovider=kakao&oauthid=${kakaoOauthId}&email=${kakaoUserEmail}&redirect=${redirectPath}`
       );
     } catch (err) {
       console.log(err);
