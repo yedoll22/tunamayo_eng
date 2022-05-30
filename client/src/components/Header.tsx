@@ -1,8 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { HeaderProps } from "../types/common";
 
 const Header = ({ toilet }: HeaderProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const query = location.search.length;
   return (
     <>
       <div className="flex items-center justify-between px-5 border-b pb-1 border-gray20 ">
@@ -10,7 +12,10 @@ const Header = ({ toilet }: HeaderProps) => {
           className="w-6 h-6 cursor-pointer"
           src="/images/common/back-icon.svg"
           alt="back-icon"
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            if (query) navigate(-1);
+            else navigate("/");
+          }}
         />
         <div className="flex flex-col items-center">
           <div className="py-1 font-medium text-xl leading-8 text-tnBlack break-words text-center">

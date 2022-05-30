@@ -12,6 +12,7 @@ const SignUp = () => {
   const oAuthProvider = getQueryString(0);
   const oAuthId = getQueryString(1);
   const email = getQueryString(2);
+  const redirect = getQueryString(3);
 
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nicknameRegex = /^[가-힣]{2,8}$/;
@@ -48,7 +49,7 @@ const SignUp = () => {
         oAuthId,
       })
       .then((res) => {
-        if (res.status === 201) navigate("/", { replace: true });
+        if (res.status === 201) navigate(redirect, { replace: true });
       })
       .catch((err) => {
         if (err.response.status === 409) {

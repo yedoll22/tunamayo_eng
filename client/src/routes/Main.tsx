@@ -149,7 +149,7 @@ const Main = () => {
     }
   }, []);
 
-  const changeCurrentArea = (map: any) => {
+  const changeCurrentArea = (map: kakao.maps.Map) => {
     setCurrentArea({
       sw: {
         lat: map.getBounds().getSouthWest().getLat(),
@@ -160,6 +160,10 @@ const Main = () => {
         lng: map.getBounds().getNorthEast().getLng(),
       },
     });
+    // const position = map.getCenter();
+    // const lat = position.getLat();
+    // const lng = position.getLng();
+    // dispatch(changeCenter({ lat, lng }));
   };
 
   const includePositions = () => {
@@ -224,12 +228,18 @@ const Main = () => {
               }}
               onDragEnd={(map) => {
                 changeCurrentArea(map);
+                const position = map.getCenter();
+                const lat = position.getLat();
+                const lng = position.getLng();
+                dispatch(changeCenter({ lat, lng }));
               }}
               onClick={() => {
-                setModalPopUp("pop-down");
-                setTimeout(() => {
-                  setModalPopUp("hidden");
-                }, 1000);
+                if (modalPopUp === "pop-up") {
+                  setModalPopUp("pop-down");
+                  setTimeout(() => {
+                    setModalPopUp("hidden");
+                  }, 1000);
+                }
               }}
             >
               <>
@@ -266,7 +276,7 @@ const Main = () => {
                       src: "/images/main/current-marker.png",
                       size: { width: 48, height: 57.78 },
                     }}
-                  />
+                  ></MapMarker>
                 )}
 
                 <ModalPopUp
