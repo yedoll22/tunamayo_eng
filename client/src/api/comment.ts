@@ -18,6 +18,7 @@ interface PostCommentVariable {
   content: string;
   rating: number;
 }
+
 const getAllComments = (toiletId: number | undefined) => {
   return customAxios.get(`/toilets/${toiletId}/comments`);
 };
@@ -29,6 +30,24 @@ export const useAllCommentsQuery = (toiletId: number | undefined) =>
     },
   });
 
+export const useToiletModalInfoQuery = (
+  toiletId: number,
+  successCallback: (data: any) => void
+) =>
+  useQuery(["modalInfo", toiletId], () => getAllComments(toiletId), {
+    select: (res: any) => {
+      const commentList = res.data.commentList;
+      const length = commentList?.length;
+      const ratingList = commentList?.map((comment: any) => comment.rating);
+      const sum = ratingList?.reduce((prev: number, curr: number) => {
+        return prev + curr;
+      }, 0);
+      const avg = Math.round((sum / length) * 10) / 10;
+      return { length, sum, avg };
+    },
+    onSuccess: (data) => successCallback(data),
+  });
+
 const deleteComment = (commentInfo: DeleteCommentVariable) => {
   return customAxios.delete(
     `/toilets/${commentInfo.toiletId}/comments/${commentInfo.commentId}`
@@ -37,7 +56,7 @@ const deleteComment = (commentInfo: DeleteCommentVariable) => {
 
 export const useDeleteComment = () => useMutation(deleteComment);
 
-const getMyComment = (toiletId: number, commentId: number) => {
+const getOriginComment = (toiletId: number, commentId: number) => {
   return customAxios.get(
     `/toilets/${toiletId}/comments?commentId=${commentId}`
   );
@@ -48,9 +67,22 @@ export const useCommentQuery = (
   commentId: number,
   successCallback: (data: any) => void
 ) =>
-  useQuery(["myComment", commentId], () => getMyComment(toiletId, commentId), {
-    select: (res) => res.data.comment,
-    onSuccess: (data) => successCallback(data),
+  useQuery(
+    ["myComment", commentId],
+    () => getOriginComment(toiletId, commentId),
+    {
+      select: (res) => res.data.comment,
+      onSuccess: (data) => successCallback(data),
+    }
+  );
+
+const getMyComments = () => {
+  return customAxios.get("/users/comments");
+};
+
+export const useMyCommentsQuery = () =>
+  useQuery("myComments", getMyComments, {
+    select: (res) => res.data.myComments,
   });
 
 const patchComment = (commentInfo: PatchCommentVariable) => {
@@ -63,7 +95,7 @@ const patchComment = (commentInfo: PatchCommentVariable) => {
   );
 };
 
-export const usePatchComment = () => useMutation(patchComment);
+export const usePatchCommentQuery = () => useMutation(patchComment);
 
 const postComment = (commentInfo: PostCommentVariable) => {
   return customAxios.post(`/toilets/${commentInfo.toiletId}/comments`, {
@@ -72,4 +104,4 @@ const postComment = (commentInfo: PostCommentVariable) => {
   });
 };
 
-export const usePostComment = () => useMutation(postComment);
+export const usePostCommentQuery = () => useMutation(postComment);

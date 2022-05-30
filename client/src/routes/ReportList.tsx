@@ -7,22 +7,24 @@ import { useAllReportsQuery } from "../api/report";
 
 const ReportList = () => {
   const reportType = getQueryString();
-  const [reportList, setReportList] = useState<IReport[]>([]);
-  const allReports = useAllReportsQuery();
+  // const [reportList, setReportList] = useState<IReport[]>([]);
+  const allReports = useAllReportsQuery(reportType);
   const [page, setPage] = useState(1);
   const limit = 7;
   const offset = (page - 1) * limit;
-  const numPages = Math.ceil(reportList.length / limit);
+  const numPages = Math.ceil(allReports?.data?.length / limit);
   const pageGroup = Math.ceil(page / 5) - 1;
 
-  const reportListRequest = async () => {
-    // const request = await customAxios.get("/reports");
-    // const list = request.data.reportList;
-    const reports = allReports?.data?.filter(
-      (report: IReport) => report.reportType === reportType
-    );
-    setReportList(reports);
-  };
+  // console.log("fad", allReports.data);
+
+  // const reportListRequest = async () => {
+  // const request = await customAxios.get("/reports");
+  // const list = request.data.reportList;
+  // const reports = allReports?.data?.filter(
+  //   (report: IReport) => report.reportType === reportType
+  // );
+  // setReportList(reports);
+  // };
 
   const indexClass = (index: number) => {
     if (index === page)
@@ -32,7 +34,7 @@ const ReportList = () => {
   };
 
   const nextPageIconAction = () => {
-    if (page === Math.ceil(reportList.length / 7)) return;
+    if (page === Math.ceil(allReports?.data?.length / 7)) return;
     else {
       setPage(page + 1);
     }
@@ -45,9 +47,9 @@ const ReportList = () => {
     }
   };
 
-  useEffect(() => {
-    reportListRequest();
-  }, []);
+  // useEffect(() => {
+  //   reportListRequest();
+  // }, []);
 
   return (
     <>
@@ -57,10 +59,12 @@ const ReportList = () => {
       />
 
       <div className="min-h-[600px]">
-        {reportList.length &&
-          reportList.slice(offset, offset + limit).map((report: IReport) => {
-            return <Report key={report.id} report={report} />;
-          })}
+        {allReports?.data?.length &&
+          allReports?.data
+            ?.slice(offset, offset + limit)
+            .map((report: IReport) => {
+              return <Report key={report.id} report={report} />;
+            })}
       </div>
       <div className="px-20 py-[17px] flex justify-center items-center h-full">
         <img
@@ -74,27 +78,28 @@ const ReportList = () => {
           alt="prev"
         />
         <div className="flex">
-          {Array(numPages)
-            .fill(0)
-            .map((_: number, i) => {
-              if (i >= pageGroup * 5 && i <= pageGroup * 5 + 4) {
-                return (
-                  <div
-                    key={i + 1}
-                    className={indexClass(i + 1)}
-                    onClick={() => setPage(i + 1)}
-                  >
-                    {i + 1}
-                  </div>
-                );
-              }
-            })}
+          {numPages &&
+            Array(numPages)
+              .fill(0)
+              .map((_: number, i) => {
+                if (i >= pageGroup * 5 && i <= pageGroup * 5 + 4) {
+                  return (
+                    <div
+                      key={i + 1}
+                      className={indexClass(i + 1)}
+                      onClick={() => setPage(i + 1)}
+                    >
+                      {i + 1}
+                    </div>
+                  );
+                }
+              })}
         </div>
         <img
           className="w-6 h-6 cursor-pointer"
           onClick={nextPageIconAction}
           src={
-            page === Math.ceil(reportList.length / 7)
+            page === Math.ceil(allReports?.data?.length / 7)
               ? "/images/report/next-icon-gray.svg"
               : "/images/report/next-icon-black.svg"
           }

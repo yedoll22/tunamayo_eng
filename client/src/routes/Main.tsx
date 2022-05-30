@@ -22,6 +22,8 @@ import { pauseGeoLocationApi } from "../slices/callGeoApiSlice";
 import { changeCenter } from "../slices/mapCenterSlice";
 import { changeLocationAllow } from "../slices/locationAllowSlice";
 import { changeCurrentLocation } from "../slices/currentLocationSlice";
+import { useAllCommentsQuery, useToiletModalInfoQuery } from "../api/comment";
+import { useQueryClient } from "react-query";
 
 interface Center {
   lat: number;
@@ -34,6 +36,7 @@ const Main = () => {
   //     dispatch(offSplash());
   //   }, 3000);
   // }, []);
+  const queryClient = useQueryClient();
   const modal = useSelector<RootState>((state) => state.modal.value);
   const callGeoLocationApi = useSelector<RootState>(
     (state) => state.callGeoApi.value
@@ -85,6 +88,13 @@ const Main = () => {
       setDrawerClose(false);
     }, 500);
   };
+  const [toiletId, setToiletId] = useState(2014);
+
+  useToiletModalInfoQuery(toiletId, (data) => {
+    if (isNaN(data.sum) || isNaN(data.avg))
+      setCommentInfo({ length: 0, avg: 0 });
+    else setCommentInfo({ length: data.length, avg: data.avg });
+  });
 
   const overlayClass = () => {
     if (drawerClose)
@@ -92,18 +102,20 @@ const Main = () => {
     else return "absolute top-0 bg-black opacity-40 w-full h-[100vh] z-40";
   };
 
-  const commentRequest = async (toiletId: number) => {
-    const request = await customAxios.get(`/toilets/${toiletId}/comments`);
-    const { commentList } = request.data;
-    const length = commentList.length;
-    const ratingList = commentList.map((comment: IComment) => comment.rating);
-    const sum = ratingList.reduce((prev: number, curr: number) => {
-      return prev + curr;
-    }, 0);
-    const avg = Math.round((sum / length) * 10) / 10;
-    if (isNaN(sum) || isNaN(avg)) setCommentInfo({ length: 0, avg: 0 });
-    else setCommentInfo({ length, avg });
-  };
+  // const commentRequest = async (toiletId: number) => {
+  // const request = await customAxios.get(`/toilets/${toiletId}/comments`);
+  // const { commentList } = request.data;
+  // queryClient.fetchQuery(["allComments", toiletId]);
+  // const commentList = toiletModalInfo?.data?.commentList;
+  // const length = commentList?.length;
+  // const ratingList = commentList?.map((comment: IComment) => comment.rating);
+  // const sum = ratingList?.reduce((prev: number, curr: number) => {
+  //   return prev + curr;
+  // }, 0);
+  // const avg = Math.round((sum / length) * 10) / 10;
+  // if (isNaN(sum) || isNaN(avg)) setCommentInfo({ length: 0, avg: 0 });
+  // else setCommentInfo({ length, avg });
+  // };
 
   const allToilets = useAllToiletsQuery();
   // const userInfo = useUserInfoQuery();
@@ -256,9 +268,10 @@ const Main = () => {
                         key={position.id}
                         position={position.latlng}
                         onClick={() => {
+                          setToiletId(position.id);
                           setModalPopUp("pop-up");
                           setToiletInfo(position);
-                          commentRequest(position.id);
+                          // commentRequest(position.id);
                         }}
                         image={{
                           src: "/images/main/marker-icon.png",

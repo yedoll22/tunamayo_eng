@@ -3,11 +3,13 @@ import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { customAxios } from "../lib/customAxios";
-import { useDispatch, useSelector } from "react-redux";
+import { DispatchProp, useDispatch, useSelector } from "react-redux";
 import { logoutHandler } from "../slices/isLoginSlice";
 import { displayModal } from "../slices/modalSlice";
 import { RootState } from "../store/store";
 import { getQueryString } from "../lib/utils";
+import { useChangeNickname } from "../api/user";
+import { Dispatch } from "@reduxjs/toolkit";
 
 const EditProfile = () => {
   const dispatch = useDispatch();
@@ -19,22 +21,33 @@ const EditProfile = () => {
   const [signout, setSignout] = useState<boolean>(false);
   const [nicknameMessage, setNicknameMessage] = useState<string>("");
   const [isNickname, setIsNickname] = useState<boolean>(false);
+  const changeNickname = useChangeNickname(
+    () => {
+      setModalTitle("닉네임 변경이 완료되었습니다!");
+      dispatch(displayModal());
+    },
+    () => {
+      setModalTitle("이미 존재하는 닉네임입니다!");
+      dispatch(displayModal());
+    }
+  );
 
-  const changeNickname = async () => {
-    await customAxios
-      .patch("/users", { changedNickname: value })
-      .then((res) => {
-        if (res.status === 200) {
-          setModalTitle("닉네임 변경이 완료되었습니다!");
-          dispatch(displayModal());
-        }
-      })
-      .catch((err) => {
-        if (err.response.status === 409) {
-          setModalTitle("이미 존재하는 닉네임입니다!");
-          dispatch(displayModal());
-        }
-      });
+  const submitHandler = async () => {
+    changeNickname.mutate(value);
+    // await customAxios
+    //   .patch("/users", { changedNickname: value })
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       setModalTitle("닉네임 변경이 완료되었습니다!");
+    //       dispatch(displayModal());
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     if (err.response.status === 409) {
+    //       setModalTitle("이미 존재하는 닉네임입니다!");
+    //       dispatch(displayModal());
+    //     }
+    //   });
   };
 
   const onChangeValue = (e: React.FormEvent<HTMLInputElement>) => {
@@ -78,7 +91,7 @@ const EditProfile = () => {
         <DrawerHeader
           title="프로필수정"
           isAdmin={false}
-          action={changeNickname}
+          action={submitHandler}
         />
         <div className="flex flex-col items-center pt-8 px-[34px]">
           <div className="w-11 h-11 rounded-full shadow-search flex justify-center items-center mb-5">
@@ -122,7 +135,7 @@ const EditProfile = () => {
         </div>
         <div
           onClick={() => {
-            setModalTitle("정말 탈퇴하시겠습니까");
+            setModalTitle("정말 탈퇴하시겠습니까?😢");
             setSignout(true);
           }}
           className="font-normal text-base text-gray40 text-center leading-[26px]"
