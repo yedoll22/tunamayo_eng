@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   useCommentQuery,
-  usePatchComment,
-  usePostComment,
+  usePatchCommentQuery,
+  usePostCommentQuery,
 } from "../api/comment";
 import DrawerHeader from "../components/DrawerHeader";
 import StarRating from "../components/StarRating";
@@ -18,8 +18,8 @@ const WriteComment = () => {
   const toiletId = Number(useParams().toiletId);
   const [content, setContent] = useState<string>("");
   const [rating, setRating] = useState<number>(0);
-  const patchComment = usePatchComment();
-  const postComment = usePostComment();
+  const patchComment = usePatchCommentQuery();
+  const postComment = usePostCommentQuery();
   const queryClient = useQueryClient();
   // const setPatchComment = (content, rating) => {
   //   setContent(content);

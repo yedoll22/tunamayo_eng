@@ -21,7 +21,6 @@ const Token = () => {
     // else if (token.isError) dispatch(logoutHandler());
     if (location.pathname !== "/login")
       dispatch(changeRedirectPath(location.pathname));
-    console.log("path : ", path);
     if (token.isSuccess) queryClient.invalidateQueries("userInfo");
     else if (token.isError) queryClient.invalidateQueries("userInfo");
     // customAxios

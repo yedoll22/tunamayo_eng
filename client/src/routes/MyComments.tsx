@@ -3,20 +3,23 @@ import { useEffect, useState } from "react";
 import MyComment from "../components/MyComment";
 import { IComment } from "../types/comment";
 import DrawerHeader from "../components/DrawerHeader";
+import { useMyCommentsQuery } from "../api/comment";
 
 const MyComments = () => {
-  const [comments, setComments] = useState<IComment[]>([]);
+  const myComments = useMyCommentsQuery();
 
-  useEffect(() => {
-    customAxios
-      .get("/users/comments")
-      .then((res) => setComments(res.data.myComments));
-  }, []);
+  // const [comments, setComments] = useState<IComment[]>([]);
+
+  // useEffect(() => {
+  //   customAxios
+  //     .get("/users/comments")
+  //     .then((res) => setComments(res.data.myComments));
+  // }, []);
 
   return (
     <>
       <DrawerHeader isAdmin={false} title="내가 쓴 리뷰" rightNone />
-      {comments?.map((comment) => {
+      {myComments?.data?.map((comment: any) => {
         return (
           <div key={comment.id}>
             <MyComment

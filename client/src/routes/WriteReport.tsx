@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { displayModal } from "../slices/modalSlice";
 import { getQueryString } from "../lib/utils";
+import { usePostReportQuery } from "../api/report";
 
 const WriteReport = () => {
   const dispatch = useDispatch();
@@ -17,27 +18,30 @@ const WriteReport = () => {
   const modal = useSelector<RootState>((state) => state.modal.value);
   const [reportTitle, setReportTitle] = useState("");
   const [reportContent, setReportContent] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
-  const postReport = async () => {
-    setLoading(true);
-    await customAxios
-      .post("/reports", {
-        reportTitle,
-        reportContent,
-        reportType,
-      })
-      .then((res) => {
-        if (res.status === 201) {
-          setLoading(false);
-          dispatch(displayModal());
-        }
-      });
+  const postReport = usePostReportQuery(() => dispatch(displayModal()));
+
+  const submitHandler = async () => {
+    postReport.mutate({ reportTitle, reportContent, reportType });
+    // setLoading(true);
+    // await customAxios
+    //   .post("/reports", {
+    //     reportTitle,
+    //     reportContent,
+    //     reportType,
+    //   })
+    //   .then((res) => {
+    //     if (res.status === 201) {
+    //       setLoading(false);
+    //       dispatch(displayModal());
+    //     }
+    //   });
   };
 
   return (
     <>
-      {loading ? (
+      {postReport.isLoading ? (
         <Loading
           content={reportType === "report" ? "화장실 제보하기" : "1:1 문의하기"}
         />
@@ -45,7 +49,7 @@ const WriteReport = () => {
       <DrawerHeader
         title={reportType === "report" ? "화장실 제보하기" : "1:1 문의하기"}
         isAdmin={false}
-        action={postReport}
+        action={submitHandler}
         reportTitle={reportTitle}
         reportContent={reportContent}
       />

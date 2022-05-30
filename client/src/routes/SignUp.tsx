@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSignUpQuery } from "../api/user";
 import { customAxios } from "../lib/customAxios";
 import { getQueryString } from "../lib/utils";
 
@@ -40,22 +41,35 @@ const SignUp = () => {
     else return defaultClass + " border-gray20 focus:border-tnBlue";
   };
 
-  const signUpRequest = () => {
-    customAxios
-      .post("/users/signup", {
-        nickname,
-        email,
-        oAuthProvider,
-        oAuthId,
-      })
-      .then((res) => {
-        if (res.status === 201) navigate(redirect, { replace: true });
-      })
-      .catch((err) => {
-        if (err.response.status === 409) {
-          setSignupErrorMessage("이미 사용 중인 닉네임입니다.");
-        }
-      });
+  const signUp = useSignUpQuery(
+    () => {
+      navigate(redirect, { replace: true });
+    },
+    () => setSignupErrorMessage("이미 사용 중인 닉네임입니다.")
+  );
+
+  const signUpButtonHandler = () => {
+    signUp.mutate({
+      nickname,
+      email,
+      oAuthProvider,
+      oAuthId,
+    });
+    // customAxios
+    //   .post("/users/signup", {
+    //     nickname,
+    //     email,
+    //     oAuthProvider,
+    //     oAuthId,
+    //   })
+    //   .then((res) => {
+    //     if (res.status === 201) navigate(redirect, { replace: true });
+    //   })
+    //   .catch((err) => {
+    //     if (err.response.status === 409) {
+    //       setSignupErrorMessage("이미 사용 중인 닉네임입니다.");
+    //     }
+    //   });
   };
 
   return (
@@ -105,7 +119,7 @@ const SignUp = () => {
         <div className="px-4">
           <button
             className="text-[#222222] text-base leading-[26px] bg-tnBlue rounded-lg font-bold h-12 py-[11px] w-full"
-            onClick={signUpRequest}
+            onClick={signUpButtonHandler}
           >
             시작하기
           </button>

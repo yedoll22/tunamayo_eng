@@ -1,6 +1,13 @@
 import { useMutation, useQuery } from "react-query";
 import { customAxios } from "../lib/customAxios";
 
+interface SignUpVariable {
+  nickname: string;
+  email: string;
+  oAuthProvider: string;
+  oAuthId: string;
+}
+
 const userLogout = ({}) => {
   return customAxios.post("/users/logout", {});
 };
@@ -27,4 +34,36 @@ export const useUserInfoQuery = () =>
     select: (res) => {
       return res.data.userInfo;
     },
+  });
+
+const changeNickname = (nickname: string) => {
+  return customAxios.patch("/users", { changedNickname: nickname });
+};
+
+export const useChangeNickname = (
+  successFn: (data: any) => void,
+  errorFn: (data: any) => void
+) =>
+  useMutation(changeNickname, {
+    onSuccess: (data) => {
+      successFn(data);
+    },
+    onError: (data) => {
+      errorFn(data);
+    },
+  });
+
+const signUp = (signUpInfo: SignUpVariable) => {
+  return customAxios.post("/users/signup", {
+    nickname: signUpInfo.nickname,
+    email: signUpInfo.email,
+    oAuthProvider: signUpInfo.oAuthProvider,
+    oAuthId: signUpInfo.oAuthId,
+  });
+};
+
+export const useSignUpQuery = (successFn: () => void, errorFn: () => void) =>
+  useMutation(signUp, {
+    onSuccess: () => successFn(),
+    onError: () => errorFn(),
   });
