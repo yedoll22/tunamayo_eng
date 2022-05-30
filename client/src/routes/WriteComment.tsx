@@ -1,45 +1,85 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  useCommentQuery,
+  usePatchComment,
+  usePostComment,
+} from "../api/comment";
 import DrawerHeader from "../components/DrawerHeader";
 import StarRating from "../components/StarRating";
 import { customAxios } from "../lib/customAxios";
 import { getQueryString } from "../lib/utils";
+import { useQueryClient } from "react-query";
 
 const WriteComment = () => {
   const navigate = useNavigate();
-  const commentId = getQueryString();
+  const commentId = Number(getQueryString());
   const ref = useRef<HTMLTextAreaElement | null>(null);
-  const { toiletId } = useParams();
+  const toiletId = Number(useParams().toiletId);
   const [content, setContent] = useState<string>("");
   const [rating, setRating] = useState<number>(0);
+  const patchComment = usePatchComment();
+  const postComment = usePostComment();
+  const queryClient = useQueryClient();
+  // const setPatchComment = (content, rating) => {
+  //   setContent(content);
+  //   setRating(rating);
+  // };
 
-  useEffect(() => {
+  const setOriginComment = (data: any) => {
     if (commentId) {
-      customAxios
-        .get(`/toilets/${toiletId}/comments?commentId=${commentId}`)
-        .then((res) => {
-          if (res.status === 206) {
-            setContent(res.data.comment.content);
-            setRating(res.data.comment.rating);
-          }
-        });
+      setContent(data.content);
+      setRating(data.rating);
     }
-  }, []);
+  };
+  useCommentQuery(Number(toiletId), Number(commentId), setOriginComment);
+  // useEffect(() => {
+  //   if (commentId) {
+  //     // setContent(comment.data.content);
+  //     // setRating(comment.data.rating);
+  //   }
+  //   // if (commentId) {
+  //   //   customAxios
+  //   //     .get(`/toilets/${toiletId}/comments?commentId=${commentId}`)
+  //   //     .then((res) => {
+  //   //       if (res.status === 206) {
+  //   //         setContent(res.data.comment.content);
+  //   //         setRating(res.data.comment.rating);
+  //   //       }
+  //   //     });
+  //   // }
+  // }, []);
 
-  const postComment = async () => {
+  const submitHandler = async () => {
     if (commentId) {
-      await customAxios.patch(`/toilets/${toiletId}/comments/${commentId}`, {
-        content,
-        rating,
-      });
-      navigate(`/toilet/${toiletId}`, { replace: true });
+      patchComment.mutate(
+        { toiletId, commentId, content, rating },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries(["allComments", toiletId]);
+            navigate(`/toilet/${toiletId}`, { replace: true });
+          },
+        }
+      );
+      // await customAxios.patch(`/toilets/${toiletId}/comments/${commentId}`, {
+      //   content,
+      //   rating,
+      // });
     } else {
-      await customAxios.post(`/toilets/${toiletId}/comments`, {
-        content,
-        rating,
-      });
-
-      navigate(`/toilet/${toiletId}`, { replace: true });
+      postComment.mutate(
+        { toiletId, content, rating },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries(["allComments", toiletId]);
+            navigate(`/toilet/${toiletId}`, { replace: true });
+          },
+        }
+      );
+      // await customAxios.post(`/toilets/${toiletId}/comments`, {
+      //   content,
+      //   rating,
+      // });
+      // navigate(`/toilet/${toiletId}`, { replace: true });
     }
   };
 
@@ -48,7 +88,7 @@ const WriteComment = () => {
       <DrawerHeader
         title="리뷰"
         isAdmin={false}
-        action={postComment}
+        action={submitHandler}
         content={content}
       />
       <div>

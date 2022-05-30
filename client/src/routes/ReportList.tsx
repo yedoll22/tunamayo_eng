@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import DrawerHeader from "../components/DrawerHeader";
 import Report from "../components/Report";
-import { customAxios } from "../lib/customAxios";
 import { IReport } from "../types/report";
 import { getQueryString } from "../lib/utils";
+import { useAllReportsQuery } from "../api/report";
 
 const ReportList = () => {
   const reportType = getQueryString();
   const [reportList, setReportList] = useState<IReport[]>([]);
+  const allReports = useAllReportsQuery();
   const [page, setPage] = useState(1);
   const limit = 7;
   const offset = (page - 1) * limit;
@@ -15,9 +16,9 @@ const ReportList = () => {
   const pageGroup = Math.ceil(page / 5) - 1;
 
   const reportListRequest = async () => {
-    const request = await customAxios.get("/reports");
-    const list = request.data.reportList;
-    const reports = list.filter(
+    // const request = await customAxios.get("/reports");
+    // const list = request.data.reportList;
+    const reports = allReports?.data?.filter(
       (report: IReport) => report.reportType === reportType
     );
     setReportList(reports);
@@ -56,9 +57,10 @@ const ReportList = () => {
       />
 
       <div className="min-h-[600px]">
-        {reportList.slice(offset, offset + limit).map((report: IReport) => {
-          return <Report key={report.id} report={report} />;
-        })}
+        {reportList.length &&
+          reportList.slice(offset, offset + limit).map((report: IReport) => {
+            return <Report key={report.id} report={report} />;
+          })}
       </div>
       <div className="px-20 py-[17px] flex justify-center items-center h-full">
         <img

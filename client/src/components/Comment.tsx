@@ -26,6 +26,7 @@ const Comment = ({
   const dispatch = useDispatch();
   const deleteModal = useSelector<RootState>((state) => state.modal.value);
   const userInfo = useTokenValidationQuery();
+
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -34,6 +35,10 @@ const Comment = ({
   }, [userId, userInfo]);
 
   const deleteComment = useDeleteComment();
+  // {data, isLoading...}
+  // {mutate, isSucces, isError}
+  // useQuery 입장에서 -> 나는 ["allComments", 2014] 값으로 되어 있는
+  // 데이터를 불러와서 그 상태를 가지고 있는것.
   const deleteHandler = () => {
     deleteComment.mutate(
       { toiletId, commentId },

@@ -36,11 +36,6 @@ const Comments = () => {
       setPostState(true);
       dispatch(displayModal());
     }
-    // if (isLogin) navigate(`/toilet/${toiletId}/comment`);
-    // else if (!isLogin) {
-    //   setPostState(true);
-    //   dispatch(displayModal());
-    // }
   };
 
   return (
