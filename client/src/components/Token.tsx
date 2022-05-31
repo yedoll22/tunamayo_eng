@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { loginHandler, logoutHandler } from "../slices/isLoginSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -10,7 +10,9 @@ import { RootState } from "../store/store";
 
 const Token = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const redirect = useSelector<RootState>((state) => state.redirectPath.value);
   const path = useSelector<RootState>((state) => state.redirectPath.value);
 
   const token = useTokenValidationQuery();
@@ -23,6 +25,7 @@ const Token = () => {
       dispatch(changeRedirectPath(location.pathname));
     if (token.isSuccess) queryClient.invalidateQueries("userInfo");
     else if (token.isError) queryClient.invalidateQueries("userInfo");
+
     // customAxios
     //   .get(`/users/token`)
     //   .then((res) => {

@@ -1,15 +1,16 @@
 import DrawerHeader from "../components/DrawerHeader";
 import Modal from "../components/Modal";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { customAxios } from "../lib/customAxios";
 import { DispatchProp, useDispatch, useSelector } from "react-redux";
 import { logoutHandler } from "../slices/isLoginSlice";
 import { displayModal } from "../slices/modalSlice";
 import { RootState } from "../store/store";
 import { getQueryString } from "../lib/utils";
-import { useChangeNickname } from "../api/user";
+import { useChangeNickname, useSignOutQuery } from "../api/user";
 import { Dispatch } from "@reduxjs/toolkit";
+import { useQueryClient } from "react-query";
 
 const EditProfile = () => {
   const dispatch = useDispatch();
@@ -18,9 +19,27 @@ const EditProfile = () => {
   const modal = useSelector<RootState>((state) => state.modal.value);
   const [value, setValue] = useState(nickname);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [signout, setSignout] = useState<boolean>(false);
+  const [signOutState, setSignOutState] = useState<boolean>(false);
   const [nicknameMessage, setNicknameMessage] = useState<string>("");
   const [isNickname, setIsNickname] = useState<boolean>(false);
+  const [errState, setErrState] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (
+      nicknameMessage === "사용 가능한 닉네임입니다." &&
+      modalTitle !== "이미 존재하는 닉네임입니다!" &&
+      nickname.length >= 2
+    )
+      setErrState(false);
+    else setErrState(true);
+  }, [nicknameMessage, modalTitle, nickname]);
+
+  const queryClient = useQueryClient();
+  const signOut = useSignOutQuery(() => {
+    queryClient.clear();
+    navigate("/", { replace: true });
+  });
+
   const changeNickname = useChangeNickname(
     () => {
       setModalTitle("닉네임 변경이 완료되었습니다!");
@@ -54,12 +73,11 @@ const EditProfile = () => {
     const nicknameRegex = /^[가-힣]{2,8}$/;
     const currentNickname = e.currentTarget.value;
     setValue(currentNickname);
-
     if (!nicknameRegex.test(currentNickname)) {
       setNicknameMessage("닉네임은 공백없이 2~8자 국문으로 설정 가능합니다.");
       setIsNickname(false);
     } else {
-      setNicknameMessage("사용가능한 닉네임을 입력하셨습니다");
+      setNicknameMessage("사용 가능한 닉네임입니다.");
       setIsNickname(true);
     }
   };
@@ -74,15 +92,16 @@ const EditProfile = () => {
   };
 
   const secessionRequest = async () => {
-    await customAxios
-      .delete("/users")
-      .then((res) => {
-        if (res.status === 200) {
-          dispatch(logoutHandler());
-          navigate("/");
-        }
-      })
-      .catch((err) => console.log(err));
+    signOut.mutate();
+    // await customAxios
+    //   .delete("/users")
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       dispatch(logoutHandler());
+    //       navigate("/");
+    //     }
+    //   })
+    //   .catch((err) => console.log(err));
   };
 
   return (
@@ -91,6 +110,7 @@ const EditProfile = () => {
         <DrawerHeader
           title="프로필수정"
           isAdmin={false}
+          errState={errState}
           action={submitHandler}
         />
         <div className="flex flex-col items-center pt-8 px-[34px]">
@@ -136,16 +156,16 @@ const EditProfile = () => {
         <div
           onClick={() => {
             setModalTitle("정말 탈퇴하시겠습니까?😢");
-            setSignout(true);
+            setSignOutState(true);
           }}
           className="font-normal text-base text-gray40 text-center leading-[26px]"
         >
           회원탈퇴
         </div>
         {modal && <Modal title={modalTitle} oneButton="확인" />}
-        {signout && (
+        {signOutState && (
           <Modal
-            setSignout={setSignout}
+            setSignout={setSignOutState}
             title={modalTitle}
             left="취소"
             right="탈퇴하기"

@@ -3,6 +3,7 @@ import { customAxios } from "../lib/customAxios";
 import { MapToiletList } from "../types/map";
 import { ToiletList } from "../types/toilet";
 
+// 모든 화장실 리스트 가져오기
 const getAllToilets = async () => {
   return customAxios.get(`/toilets`).then((res) => {
     const { toiletList } = res.data;
@@ -21,6 +22,7 @@ const getAllToilets = async () => {
 export const useAllToiletsQuery = () =>
   useQuery<ToiletList[]>("allToilets", getAllToilets);
 
+// 특정 화장실 상세 정보 가져오기
 const getToiletById = (toiletId: number) => {
   return customAxios.get(`toilets/${toiletId}`);
 };

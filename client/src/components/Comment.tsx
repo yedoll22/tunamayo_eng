@@ -17,13 +17,14 @@ const Comment = ({
   userId,
   toiletId,
   commentId,
-  setDeleteState,
-  deleteState,
+  // setDeleteState,
+  // deleteState,
   createdAt,
 }: CommentProps) => {
   const [isMine, setIsMine] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [deleteState, setDeleteState] = useState<boolean>(false);
   const deleteModal = useSelector<RootState>((state) => state.modal.value);
   const userInfo = useTokenValidationQuery();
 
@@ -52,49 +53,57 @@ const Comment = ({
 
   return (
     <>
-      <div className="px-5 py-4 border-b border-gray20">
-        <div className="flex justify-between">
-          <div className="font-medium text-tnBlack text-base leading-[26px]">
-            {nickname}
+      <div className="-z-50">
+        <div className="px-5 py-4 border-b border-gray20">
+          <div className="flex justify-between">
+            <div
+              onClick={() => console.log("commentId : ", commentId)}
+              className="font-medium text-tnBlack text-base leading-[26px]"
+            >
+              {nickname}
+            </div>
+            <div className="text-gray60 font-normal text-sm leading-[22px]">
+              {createdAt.split("T")[0]}
+            </div>
           </div>
-          <div className="text-gray60 font-normal text-sm leading-[22px]">
-            {createdAt.split("T")[0]}
+          <div className="py-4 flex space-x-1 items-center">
+            <StarRating
+              rating={rating}
+              imgClass="w-[15px] h-[15px]"
+              starColor="blue"
+            />
+            <div className="text-xs text-gray60">({rating.toFixed(1)})</div>
           </div>
-        </div>
-        <div className="py-4 flex space-x-1 items-center">
-          <StarRating
-            rating={rating}
-            imgClass="w-[15px] h-[15px]"
-            starColor="blue"
-          />
-          <div className="text-xs text-gray60">({rating.toFixed(1)})</div>
-        </div>
-        <div className="font-normal text-gray60 text-sm leading-[22px] mb-4">
-          {content}
-        </div>
+          <div className="font-normal text-gray60 text-sm leading-[22px] mb-4">
+            {content}
+          </div>
 
-        {isMine && (
-          <div className="flex space-x-4">
-            <div className="flex-1"></div>
-            <div
-              onClick={() =>
-                navigate(`/toilet/${toiletId}/comment?commentId=${commentId}`)
-              }
-              className="cursor-pointer font-normal text-sm leading-[22px] text-gray60"
-            >
-              수정
+          {isMine && (
+            <div className="flex space-x-4">
+              <div className="flex-1"></div>
+              <div
+                onClick={() =>
+                  navigate(`/toilet/${toiletId}/comment?commentId=${commentId}`)
+                }
+                className="cursor-pointer font-normal text-sm leading-[22px] text-gray60"
+              >
+                수정
+              </div>
+              <div
+                onClick={() => {
+                  // console.log("click : ", commentId);
+                  // queryClient.invalidateQueries(["allComments", toiletId]);
+                  window.scrollTo(0, 0);
+                  setDeleteState(true);
+                  dispatch(displayModal());
+                }}
+                className="cursor-pointer font-normal text-sm leading-[22px] text-gray60"
+              >
+                삭제
+              </div>
             </div>
-            <div
-              onClick={() => {
-                setDeleteState(true);
-                dispatch(displayModal());
-              }}
-              className="cursor-pointer font-normal text-sm leading-[22px] text-gray60"
-            >
-              삭제
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       {deleteModal ? (
         deleteState ? (

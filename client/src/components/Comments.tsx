@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IComment } from "../types/comment";
 import Comment from "./Comment";
@@ -16,9 +16,10 @@ const Comments = () => {
   const userInfo = useTokenValidationQuery();
   // const isLogin = useSelector<any>((state) => state.isLogin.value);
   // const [commentList, setCommentList] = useState<IComment[]>([]);
-  const [deleteState, setDeleteState] = useState<boolean>(false);
+  // const [deleteState, setDeleteState] = useState<boolean>(false);
   const [postState, setPostState] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
+
   const loginModal = useSelector<RootState>((state) => state.modal.value);
 
   // const commentRequest = async () => {
@@ -39,7 +40,7 @@ const Comments = () => {
   };
 
   return (
-    <div>
+    <div className="">
       <>
         {loginModal ? (
           postState ? (
@@ -62,21 +63,24 @@ const Comments = () => {
             글쓰기
           </button>
         </div>
-        {allComments.data &&
+
+        {allComments?.data &&
           [...allComments.data].slice(0, 3).map((comment: IComment) => {
             return (
-              <Comment
-                key={comment.id}
-                commentId={comment.id}
-                toiletId={comment.toiletId}
-                userId={comment.userId}
-                content={comment.content}
-                nickname={comment.nickname}
-                rating={comment.rating}
-                createdAt={comment.createdAt}
-                deleteState={deleteState}
-                setDeleteState={setDeleteState}
-              />
+              <>
+                <Comment
+                  key={comment.id}
+                  commentId={comment.id}
+                  toiletId={comment.toiletId}
+                  userId={comment.userId}
+                  content={comment.content}
+                  nickname={comment.nickname}
+                  rating={comment.rating}
+                  createdAt={comment.createdAt}
+                  // deleteState={deleteState}
+                  // setDeleteState={setDeleteState}
+                />
+              </>
             );
           })}
 
@@ -94,29 +98,15 @@ const Comments = () => {
                   nickname={comment.nickname}
                   rating={comment.rating}
                   createdAt={comment.createdAt}
-                  deleteState={deleteState}
-                  setDeleteState={setDeleteState}
+                  // deleteState={deleteState}
+                  // setDeleteState={setDeleteState}
                 />
               );
             })}
-
-        {allComments.data?.length ? null : (
-          <div className="flex flex-col items-center pt-20">
-            <img
-              className="mb-1 w-12 h-12"
-              src="/images/toilet/no-review-icon.svg"
-              alt="no-reveiw-icon"
-            />
-            <div className="flex flex-col items-center font-normal text-base leadin-[26px] text-gray40">
-              <div>아직 리뷰가 없어요.</div>
-              <div>첫 번째 리뷰를 남겨주세요!</div>
-            </div>
-          </div>
-        )}
         {allComments.data?.length > 3 && (
           <div
             onClick={() => setShowMore(!showMore)}
-            className="flex justify-center pt-2 pb-6 cursor-pointer"
+            className="flex justify-center pt-2 pb-6 cursor-pointer z-0"
           >
             <div className="text-tnBlack font-normal text-base leading-[26px]">
               {showMore ? "접기" : "더보기"}
@@ -130,6 +120,20 @@ const Comments = () => {
               }
               alt="comment-open-arrow"
             />
+          </div>
+        )}
+
+        {allComments.data?.length ? null : (
+          <div className="flex flex-col items-center pt-20">
+            <img
+              className="mb-1 w-12 h-12"
+              src="/images/toilet/no-review-icon.svg"
+              alt="no-reveiw-icon"
+            />
+            <div className="flex flex-col items-center font-normal text-base leadin-[26px] text-gray40">
+              <div>아직 리뷰가 없어요.</div>
+              <div>첫 번째 리뷰를 남겨주세요!</div>
+            </div>
           </div>
         )}
       </>
