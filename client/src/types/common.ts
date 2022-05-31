@@ -25,6 +25,7 @@ export interface DrawerHeaderProps {
   reportContent?: string;
   content?: string;
   rightNone?: boolean;
+  errState?: boolean;
   action?: () => void;
 }
 
@@ -48,7 +49,7 @@ export interface ModalProps {
   oneButton?: string;
   left?: string;
   right?: string;
-  action?: () => void;
+  action?: (data?: any) => void;
 }
 
 export interface NavProps {

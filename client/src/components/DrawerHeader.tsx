@@ -8,6 +8,7 @@ const DrawerHeader = ({
   reportContent,
   content,
   rightNone,
+  errState,
   action,
 }: DrawerHeaderProps) => {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ const DrawerHeader = ({
       else return false;
     } else if (title === "리뷰") {
       if (!content?.length) return true;
+      else return false;
+    } else if (title === "프로필수정") {
+      if (errState) return true;
       else return false;
     }
   };

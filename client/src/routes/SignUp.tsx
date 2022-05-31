@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useSignUpQuery } from "../api/user";
 import { customAxios } from "../lib/customAxios";
@@ -10,6 +11,7 @@ const SignUp = () => {
   const [nicknameMessage, setNicknameMessage] = useState<string>("");
   const [signupErrorMessage, setSignupErrorMessage] = useState<string>("");
   const [isNickname, setIsNickname] = useState<boolean>(false);
+  const [errState, setErrState] = useState<boolean>(true);
   const oAuthProvider = getQueryString(0);
   const oAuthId = getQueryString(1);
   const email = getQueryString(2);
@@ -24,11 +26,22 @@ const SignUp = () => {
       setNicknameMessage("닉네임은 공백없이 2~8자 국문으로 설정 가능합니다.");
       setIsNickname(false);
     } else {
-      setNicknameMessage("사용가능한 닉네임을 입력하셨습니다");
+      setNicknameMessage("사용가능한 닉네임을 입력하셨습니다.");
       setIsNickname(true);
     }
   };
 
+  useEffect(() => {
+    if (
+      nicknameMessage === "사용가능한 닉네임을 입력하셨습니다." &&
+      signupErrorMessage === "" &&
+      nickname.length >= 2
+    )
+      setErrState(false);
+    else setErrState(true);
+  }, [nicknameMessage, signupErrorMessage]);
+
+  console.log(errState);
   const nicknameInputClass = () => {
     const defaultClass =
       "pl-4 box-border border-2 rounded-lg text-base font-normal w-full h-12 focus:outline-none";
@@ -42,36 +55,32 @@ const SignUp = () => {
   };
 
   const signUp = useSignUpQuery(
-    () => {
-      navigate(redirect, { replace: true });
-    },
+    () => navigate(redirect, { replace: true }),
     () => setSignupErrorMessage("이미 사용 중인 닉네임입니다.")
   );
 
-  const signUpButtonHandler = () => {
+  const signUpButtonHandler = () =>
     signUp.mutate({
       nickname,
       email,
       oAuthProvider,
       oAuthId,
     });
-    // customAxios
-    //   .post("/users/signup", {
-    //     nickname,
-    //     email,
-    //     oAuthProvider,
-    //     oAuthId,
-    //   })
-    //   .then((res) => {
-    //     if (res.status === 201) navigate(redirect, { replace: true });
-    //   })
-    //   .catch((err) => {
-    //     if (err.response.status === 409) {
-    //       setSignupErrorMessage("이미 사용 중인 닉네임입니다.");
-    //     }
-    //   });
-  };
-
+  // customAxios
+  //   .post("/users/signup", {
+  //     nickname,
+  //     email,
+  //     oAuthProvider,
+  //     oAuthId,
+  //   })
+  //   .then((res) => {
+  //     if (res.status === 201) navigate(redirect, { replace: true });
+  //   })
+  //   .catch((err) => {
+  //     if (err.response.status === 409) {
+  //       setSignupErrorMessage("이미 사용 중인 닉네임입니다.");
+  //     }
+  //   });
   return (
     <>
       <div className="pt-[128px] flex flex-col">
@@ -103,22 +112,23 @@ const SignUp = () => {
             <span
               className={
                 isNickname
-                  ? "pl-2 text-base font-normal text-tnBlue"
-                  : "pl-2 text-base font-normal text-tnRed"
+                  ? "pl-2 pt-1 block text-sm font-normal text-tnBlue"
+                  : "pl-2 pt-1 block text-sm font-normal text-tnRed"
               }
             >
               {nicknameMessage}
             </span>
           ) : null}
           {signupErrorMessage === "이미 사용 중인 닉네임입니다." ? (
-            <div className="pt-1 pl-2 text-base font-normal text-tnRed">
+            <div className="pt-1 pl-2 text-sm font-normal text-tnRed">
               {signupErrorMessage}
             </div>
           ) : null}
         </div>
         <div className="px-4">
           <button
-            className="text-[#222222] text-base leading-[26px] bg-tnBlue rounded-lg font-bold h-12 py-[11px] w-full"
+            disabled={errState}
+            className="text-white text-base leading-[26px] bg-tnBlue rounded-lg font-bold h-12 py-[11px] w-full disabled:bg-tnBlue disabled:bg-opacity-40 disabled:text-white disabled:text-opacity-90"
             onClick={signUpButtonHandler}
           >
             시작하기

@@ -8,23 +8,7 @@ interface SignUpVariable {
   oAuthId: string;
 }
 
-const userLogout = ({}) => {
-  return customAxios.post("/users/logout", {});
-};
-
-export const useLogoutQuery = () => useMutation(userLogout);
-
-const tokenValidation = () => {
-  return customAxios.get("/users/token");
-};
-
-export const useTokenValidationQuery = () =>
-  useQuery("token", tokenValidation, {
-    select: (res) => {
-      return { status: res.status, id: res.data.id };
-    },
-  });
-
+// 유저정보 가져오기
 const getUserInfo = () => {
   return customAxios.get("/users");
 };
@@ -36,6 +20,7 @@ export const useUserInfoQuery = () =>
     },
   });
 
+// 닉네임 변경하기
 const changeNickname = (nickname: string) => {
   return customAxios.patch("/users", { changedNickname: nickname });
 };
@@ -53,6 +38,7 @@ export const useChangeNickname = (
     },
   });
 
+// 회원가입
 const signUp = (signUpInfo: SignUpVariable) => {
   return customAxios.post("/users/signup", {
     nickname: signUpInfo.nickname,
@@ -64,6 +50,35 @@ const signUp = (signUpInfo: SignUpVariable) => {
 
 export const useSignUpQuery = (successFn: () => void, errorFn: () => void) =>
   useMutation(signUp, {
-    onSuccess: () => successFn(),
-    onError: () => errorFn(),
+    onSuccess: successFn,
+    onError: errorFn,
+  });
+
+// 로그아웃
+const userLogout = ({}) => {
+  return customAxios.post("/users/logout", {});
+};
+
+export const useLogoutQuery = () => useMutation(userLogout);
+
+// 회원탈퇴
+const signOut = () => {
+  return customAxios.delete("/users");
+};
+
+export const useSignOutQuery = (successFn: () => void) =>
+  useMutation(signOut, {
+    onSuccess: successFn,
+  });
+
+// 쿠키에 있는 토큰 유효성 검증
+const tokenValidation = () => {
+  return customAxios.get("/users/token");
+};
+
+export const useTokenValidationQuery = () =>
+  useQuery("token", tokenValidation, {
+    select: (res) => {
+      return { status: res.status, id: res.data.id };
+    },
   });

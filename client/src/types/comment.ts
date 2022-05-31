@@ -33,7 +33,7 @@ export interface CommentProps {
   userId: number;
   toiletId: number;
   commentId: number;
-  setDeleteState: Dispatch<SetStateAction<boolean>>;
-  deleteState: boolean;
+  // setDeleteState: Dispatch<SetStateAction<boolean>>;
+  // deleteState: boolean;
   createdAt: string;
 }

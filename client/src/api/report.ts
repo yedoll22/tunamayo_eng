@@ -7,9 +7,11 @@ interface PostReportVariable {
   reportType: string;
 }
 
+// 모든 제보, 문의 리스트 가져오기
 const getAllReports = () => {
   return customAxios.get("/reports");
 };
+
 export const useAllReportsQuery = (reportType: string) =>
   useQuery(["allReports", reportType], getAllReports, {
     select: (res) => {
@@ -20,6 +22,7 @@ export const useAllReportsQuery = (reportType: string) =>
     },
   });
 
+// 특정 제보, 문의 상세 정보 가져오기
 const getReportById = (id: string | undefined) => {
   return customAxios.get(`/reports/${id}`);
 };
@@ -28,6 +31,7 @@ export const useReportQuery = (id: string | undefined) =>
     select: (res) => res.data.report,
   });
 
+// 제보, 문의하기
 const postReport = (reportInfo: PostReportVariable) => {
   return customAxios.post("/reports", {
     reportTitle: reportInfo.reportTitle,
