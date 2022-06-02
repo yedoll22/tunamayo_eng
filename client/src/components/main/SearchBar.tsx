@@ -1,39 +1,20 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
-import { ToiletPosition } from "../types/toilet";
-// import { SearchBarProps } from "../types/common";
+import { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { changeCenter } from "../slices/mapCenterSlice";
-import { useAllToiletsQuery } from "../api/toilet";
+import { changeCenter } from "../../slices/mapCenterSlice";
+import { useAllToiletsQuery } from "../../api/toilet";
+import { ToiletPosition } from "../../types/toilet";
 import _ from "lodash";
 
 const SearchBar = () => {
   const dispatch = useDispatch();
-  const allToilets = useAllToiletsQuery();
 
+  const [keyword, setKeyword] = useState<string>("");
   const [matchingList, setMatchingList] = useState<ToiletPosition[]>([]);
-  const [keyword, setKeyword] = useState("");
   const [searchOverlay, setSearchOverlay] = useState<boolean>(false);
 
-  // const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setKeyword(e.target.value);
-  // };
-
-  // useMemo(() => {
-  //   if (keyword.length && allToilets?.data) {
-  //     const filteredToilet = [...allToilets.data].filter((toilet) => {
-  //       return (
-  //         toilet.roadName.includes(keyword) || toilet.title.includes(keyword)
-  //       );
-  //     });
-  //     setMatchingList(filteredToilet);
-  //   } else {
-  //     setMatchingList([]);
-  //   }
-  // }, [keyword]);
+  const allToilets = useAllToiletsQuery();
 
   const queryRequest = async (search: string, allToilets: any) => {
-    console.log("keyword", search);
-    console.log("data", allToilets?.data);
     if (search && allToilets?.data) {
       const filteredToilet = [...allToilets.data].filter((toilet) => {
         return (
@@ -46,26 +27,19 @@ const SearchBar = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (keyword.length && allToilets?.data) {
-  //     const filteredToilet = [...allToilets.data].filter((toilet) => {
-  //       return (
-  //         toilet.roadName.includes(keyword) || toilet.title.includes(keyword)
-  //       );
-  //     });
-  //     setMatchingList(filteredToilet);
-  //   } else {
-  //     setMatchingList([]);
-  //   }
-  // }, [keyword]);
-
   const debounceFilter = useCallback(_.debounce(queryRequest, 500), []);
 
-  const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-    debounceFilter(e.target.value, allToilets);
-    if (keyword === "") setMatchingList([]);
+  const searchHandler = (e: any) => {
+    if (e === "") {
+      queryRequest("", allToilets);
+      if (keyword === "") setMatchingList([]);
+    } else {
+      setKeyword(e.target.value);
+      debounceFilter(e.target.value, allToilets);
+      if (keyword === "") setMatchingList([]);
+    }
   };
+
   return (
     <>
       {searchOverlay ? (
@@ -94,6 +68,7 @@ const SearchBar = () => {
                   alt="clear-button"
                   onClick={() => {
                     setKeyword("");
+                    searchHandler("");
                   }}
                 />
               ) : null}
@@ -108,7 +83,6 @@ const SearchBar = () => {
                     key={i}
                     onClick={() => {
                       dispatch(changeCenter(toilet.latlng));
-                      // setCenter({ center: toilet.latlng, isAllow: false });
                       setKeyword(toilet.title);
                       setSearchOverlay(false);
                       setMatchingList([]);

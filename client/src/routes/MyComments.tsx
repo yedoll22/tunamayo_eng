@@ -1,20 +1,9 @@
-import { customAxios } from "../lib/customAxios";
-import { useEffect, useState } from "react";
-import MyComment from "../components/MyComment";
-import { IComment } from "../types/comment";
-import DrawerHeader from "../components/DrawerHeader";
+import MyComment from "../components/comment/MyComment";
+import DrawerHeader from "../components/common/DrawerHeader";
 import { useMyCommentsQuery } from "../api/comment";
 
 const MyComments = () => {
   const myComments = useMyCommentsQuery();
-
-  // const [comments, setComments] = useState<IComment[]>([]);
-
-  // useEffect(() => {
-  //   customAxios
-  //     .get("/users/comments")
-  //     .then((res) => setComments(res.data.myComments));
-  // }, []);
 
   return (
     <>

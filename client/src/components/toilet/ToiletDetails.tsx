@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ToiletDetailsProps } from "../types/toilet";
+import { ToiletDetailsProps } from "../../types/toilet";
 
 const ToiletDetails = ({ toilet }: ToiletDetailsProps) => {
   const [dropdown, setDropdown] = useState<Boolean>(false);

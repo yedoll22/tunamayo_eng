@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { DrawerHeaderProps } from "../types/common";
+import { DrawerHeaderProps } from "../../types/common";
 
 const DrawerHeader = ({
   title,
@@ -36,6 +36,7 @@ const DrawerHeader = ({
           onClick={() => navigate(-1)}
         />
         <div className="font-medium text-xl leading-8">{title}</div>
+
         {isAdmin ? (
           <div className="text-transparent">완료</div>
         ) : (

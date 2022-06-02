@@ -1,34 +1,24 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { IComment } from "../types/comment";
 import Comment from "./Comment";
+import Modal from "../common/Modal";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Modal from "./Modal";
-import { RootState } from "../store/store";
-import { displayModal } from "../slices/modalSlice";
-import { useAllCommentsQuery } from "../api/comment";
-import { useTokenValidationQuery } from "../api/user";
+import { RootState } from "../../store/store";
+import { displayModal } from "../../slices/modalSlice";
+import { useAllCommentsQuery } from "../../api/comment";
+import { useTokenValidationQuery } from "../../api/user";
+import { IComment } from "../../types/comment";
 
 const Comments = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { toiletId } = useParams();
-  const userInfo = useTokenValidationQuery();
-  // const isLogin = useSelector<any>((state) => state.isLogin.value);
-  // const [commentList, setCommentList] = useState<IComment[]>([]);
-  // const [deleteState, setDeleteState] = useState<boolean>(false);
+
   const [postState, setPostState] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
-
   const loginModal = useSelector<RootState>((state) => state.modal.value);
 
-  // const commentRequest = async () => {
-  //   const request = await customAxios.get(`/toilets/${toiletId}/comments`);
-  //   const { commentList } = request.data;
-
-  //   setCommentList(commentList);
-  // };
-
+  const userInfo = useTokenValidationQuery();
   const allComments = useAllCommentsQuery(Number(toiletId));
 
   const writeCommentHandler = () => {
@@ -40,7 +30,7 @@ const Comments = () => {
   };
 
   return (
-    <div className="">
+    <div>
       <>
         {loginModal ? (
           postState ? (
@@ -67,20 +57,16 @@ const Comments = () => {
         {allComments?.data &&
           [...allComments.data].slice(0, 3).map((comment: IComment) => {
             return (
-              <>
-                <Comment
-                  key={comment.id}
-                  commentId={comment.id}
-                  toiletId={comment.toiletId}
-                  userId={comment.userId}
-                  content={comment.content}
-                  nickname={comment.nickname}
-                  rating={comment.rating}
-                  createdAt={comment.createdAt}
-                  // deleteState={deleteState}
-                  // setDeleteState={setDeleteState}
-                />
-              </>
+              <Comment
+                key={comment.id}
+                commentId={comment.id}
+                toiletId={comment.toiletId}
+                userId={comment.userId}
+                content={comment.content}
+                nickname={comment.nickname}
+                rating={comment.rating}
+                createdAt={comment.createdAt}
+              />
             );
           })}
 
@@ -98,11 +84,10 @@ const Comments = () => {
                   nickname={comment.nickname}
                   rating={comment.rating}
                   createdAt={comment.createdAt}
-                  // deleteState={deleteState}
-                  // setDeleteState={setDeleteState}
                 />
               );
             })}
+
         {allComments.data?.length > 3 && (
           <div
             onClick={() => setShowMore(!showMore)}
