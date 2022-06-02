@@ -1,10 +1,9 @@
+import Loading from "../common/Loading";
 import { useState } from "react";
-import Loading from "./Loading";
-// import { CurrentLocationButtonProps } from "../types/map";
 import { useDispatch } from "react-redux";
-import { changeCenter } from "../slices/mapCenterSlice";
-import { changeLocationAllow } from "../slices/locationAllowSlice";
-import { changeCurrentLocation } from "../slices/currentLocationSlice";
+import { changeCenter } from "../../slices/mapCenterSlice";
+import { changeLocationAllow } from "../../slices/locationAllowSlice";
+import { changeCurrentLocation } from "../../slices/currentLocationSlice";
 
 const CurrentLocationButton = () => {
   const dispatch = useDispatch();
@@ -27,27 +26,14 @@ const CurrentLocationButton = () => {
               lng: position.coords.longitude,
             })
           );
-          // setCenter((prev) => ({
-          //   ...prev,
-          //   center: {
-          //     lat: position.coords.latitude,
-          //     lng: position.coords.longitude,
-          //   },
-          //   isAllow: true,
-          // }));
           setClickState(false);
         },
-        (err) => {
-          console.log(err);
+        () => {
           setClickState(false);
         }
       );
     } else {
       dispatch(changeLocationAllow(false));
-      // setCenter((prev) => ({
-      //   ...prev,
-      //   isAllow: false,
-      // }));
     }
   };
 

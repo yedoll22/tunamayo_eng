@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { displayModal, hideModal } from "../slices/modalSlice";
-import { RootState } from "../store/store";
-import Modal from "./Modal";
+import Modal from "../common/Modal";
 import StarRating from "./StarRating";
-import { CommentProps } from "../types/comment";
-import { useDeleteComment } from "../api/comment";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { displayModal, hideModal } from "../../slices/modalSlice";
+import { CommentProps } from "../../types/comment";
 import { useQueryClient } from "react-query";
-import { useTokenValidationQuery } from "../api/user";
+import { useDeleteComment } from "../../api/comment";
+import { useTokenValidationQuery } from "../../api/user";
 
 const Comment = ({
   content,
@@ -17,25 +17,23 @@ const Comment = ({
   userId,
   toiletId,
   commentId,
-  // setDeleteState,
-  // deleteState,
   createdAt,
 }: CommentProps) => {
-  const [isMine, setIsMine] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [isMine, setIsMine] = useState<boolean>(false);
   const [deleteState, setDeleteState] = useState<boolean>(false);
   const deleteModal = useSelector<RootState>((state) => state.modal.value);
-  const userInfo = useTokenValidationQuery();
 
   const queryClient = useQueryClient();
+  const userInfo = useTokenValidationQuery();
+  const deleteComment = useDeleteComment();
 
   useEffect(() => {
     if (userInfo?.data?.status === 200 && userInfo?.data?.id === userId)
       setIsMine(true);
   }, [userId, userInfo]);
-
-  const deleteComment = useDeleteComment();
 
   const deleteHandler = () => {
     deleteComment.mutate(
@@ -91,8 +89,6 @@ const Comment = ({
               </div>
               <div
                 onClick={() => {
-                  // console.log("click : ", commentId);
-                  // queryClient.invalidateQueries(["allComments", toiletId]);
                   window.scrollTo(0, 0);
                   setDeleteState(true);
                   dispatch(displayModal());

@@ -1,27 +1,21 @@
+import Modal from "../common/Modal";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { customAxios } from "../lib/customAxios";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutHandler } from "../slices/isLoginSlice";
-import { useEffect, useState } from "react";
-import Modal from "./Modal";
-import { RootState } from "../store/store";
-import { displayModal, hideModal } from "../slices/modalSlice";
-import { DrawerProps } from "../types/common";
-import { useLogoutQuery, useUserInfoQuery } from "../api/user";
+import { RootState } from "../../store/store";
+import { displayModal, hideModal } from "../../slices/modalSlice";
+import { useLogoutQuery, useUserInfoQuery } from "../../api/user";
+import { DrawerProps } from "../../types/common";
 
 const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const logoutModal = useSelector<RootState>((state) => state.modal.value);
   const [logoutState, setLogoutState] = useState<boolean>(false);
 
   const logout = useLogoutQuery();
   const userInfo = useUserInfoQuery();
-
-  // console.log(userInfo);
-  // useEffect(() => {
-  //   if (userInfo.isError) queryClient.invalidateQueries("userInfo");
-  // }, [userInfo]);
 
   const logoutRequest = async () => {
     logout.mutate(
@@ -33,10 +27,6 @@ const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
         },
       }
     );
-    // if (request.status === 200) {
-    //   dispatch(logoutHandler());
-    //   window.location.reload();
-    // } else window.location.reload();
   };
 
   const drawerClass = () => {
@@ -93,6 +83,7 @@ const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
             >
               내가 쓴 리뷰
             </div>
+
             <div
               className="cursor-pointer"
               onClick={() => {
@@ -103,6 +94,7 @@ const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
             >
               화장실 제보하기
             </div>
+
             <div
               className="cursor-pointer"
               onClick={() => {
@@ -113,7 +105,11 @@ const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
             >
               1:1 문의
             </div>
-            <div className="cursor-pointer">버전정보</div>
+
+            <div onClick={() => navigate("/policy")} className="cursor-pointer">
+              버전정보
+            </div>
+
             {userInfo?.data?.isAdmin ? (
               <div
                 className="cursor-pointer"
@@ -125,6 +121,7 @@ const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
               </div>
             ) : null}
           </div>
+
           <div
             onClick={() => {
               if (userInfo?.data) {

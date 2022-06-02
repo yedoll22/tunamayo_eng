@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { hideModal } from "../slices/modalSlice";
-import { ModalProps } from "../types/common";
+import { hideModal } from "../../slices/modalSlice";
+import { ModalProps } from "../../types/common";
 
 const Modal = ({
   setSignout,

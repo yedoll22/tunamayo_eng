@@ -1,10 +1,11 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { HeaderProps } from "../types/common";
+import { HeaderProps } from "../../types/common";
 
 const Header = ({ toilet }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const query = location.search.length;
+
   return (
     <>
       <div className="flex items-center justify-between px-5 border-b pb-1 border-gray20 ">
@@ -28,6 +29,7 @@ const Header = ({ toilet }: HeaderProps) => {
               <div> {toilet?.toiletName}</div>
             )}
           </div>
+
           <div className="py-1 text-sm text-gray80 text-center">
             {toilet?.roadName.includes("(") ? (
               <div>

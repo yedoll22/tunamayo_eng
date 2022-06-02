@@ -1,4 +1,5 @@
-import { LoadingProps } from "../types/common";
+import { LoadingProps } from "../../types/common";
+
 const Loading = ({ content }: LoadingProps) => {
   return (
     <div className="absolute top-0 w-full min-h-[100vh] z-[100] bg-loadingOverlay ">

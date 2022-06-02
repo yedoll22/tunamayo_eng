@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { ReportProps } from "../types/report";
+import { ReportProps } from "../../types/report";
 
 const Report = ({ report }: ReportProps) => {
   const navigate = useNavigate();
+
   return (
     <>
       <div

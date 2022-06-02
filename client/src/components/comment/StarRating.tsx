@@ -1,4 +1,4 @@
-import { StarRatingProps } from "../types/common";
+import { StarRatingProps } from "../../types/common";
 
 const StarRating = ({ rating, imgClass, starColor }: StarRatingProps) => {
   const numberOfFilled = Math.floor(rating);
@@ -18,6 +18,7 @@ const StarRating = ({ rating, imgClass, starColor }: StarRatingProps) => {
             />
           </div>
         ))}
+
       {Array(numberOfHalfFilled)
         .fill(1)
         .map((_, i) => (
@@ -29,6 +30,7 @@ const StarRating = ({ rating, imgClass, starColor }: StarRatingProps) => {
             />
           </div>
         ))}
+
       {Array(numberOfNonFilled)
         .fill(1)
         .map((_, i) => (

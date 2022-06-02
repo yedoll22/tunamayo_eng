@@ -5,9 +5,9 @@ import helmet from "helmet";
 import userRouter from "./router/users";
 import toiletRouter from "./router/toilets";
 import reportRouter from "./router/reports";
+import cookieparser from "cookie-parser";
 import "reflect-metadata";
 import { DB } from "./data-source";
-import cookieparser from "cookie-parser";
 
 DB.initialize();
 
@@ -18,13 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:8080",
-      "http://localhost:3000/",
-      "https://tunamayo-toilet.com",
-      "https://www.tunamayo-toilet.com",
-    ],
+    origin: ["https://tunamayo-toilet.com", "https://www.tunamayo-toilet.com"],
     credentials: true,
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   })
