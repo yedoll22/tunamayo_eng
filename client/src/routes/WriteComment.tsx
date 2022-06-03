@@ -66,9 +66,9 @@ const WriteComment = () => {
       />
       <div>
         <div className="flex flex-col items-center">
-          <div className="relative flex w-fit items-center justify-center gap-x-1">
+          <div className="relative mx-auto flex w-fit items-center justify-center gap-x-1 py-1">
             <input
-              className="bg-red-500 absolute top-0 right-0 h-full w-full cursor-pointer py-0 opacity-0"
+              className="absolute top-0 right-0 h-full w-full cursor-pointer py-0 opacity-0"
               type="range"
               step="0.5"
               min="0"
@@ -79,7 +79,7 @@ const WriteComment = () => {
               <div className="pt-4 pb-1 flex items-center space-x-5">
                 <StarRating
                   rating={rating}
-                  imgClass="w-9 h-9"
+                  imgClass="w-12 h-12"
                   starColor="blue"
                 />
               </div>
