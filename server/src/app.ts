@@ -18,7 +18,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ["https://tunamayo-toilet.com", "https://www.tunamayo-toilet.com"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:8080",
+      "http://localhost:3000/",
+      "https://tunamayo-toilet.com",
+      "https://www.tunamayo-toilet.com",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   })

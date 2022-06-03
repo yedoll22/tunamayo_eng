@@ -147,9 +147,12 @@ const Main = () => {
   }, [currentArea, allToilets.data, center]);
 
   useEffect(() => {
-    setTimeout(() => {
-      dispatch(offSplash());
-    }, 3000);
+    if (window.history.length !== 1) dispatch(offSplash());
+    else {
+      setTimeout(() => {
+        dispatch(offSplash());
+      }, 3000);
+    }
   }, []);
 
   const overlayClass = () => {
