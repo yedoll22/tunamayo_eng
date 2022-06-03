@@ -23,7 +23,7 @@ const Modal = ({
   const overlayClass = () => {
     const defaultClass = "bg-overlay top-0 absolute w-full z-[60] ";
     if (title === "해당 댓글을 삭제하시겠습니까?😮")
-      return defaultClass + "h-full";
+      return defaultClass + "h-[100vh]";
     else return defaultClass + "h-[100vh]";
   };
 

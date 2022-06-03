@@ -66,9 +66,9 @@ const WriteComment = () => {
       />
       <div>
         <div className="flex flex-col items-center">
-          <div className="relative mx-auto flex w-fit items-center justify-center gap-x-1 py-1">
+          <div className="relative mx-auto flex w-fit items-center justify-center gap-x-1 py-1 focus:outline-none">
             <input
-              className="absolute top-0 right-0 h-full w-full cursor-pointer py-0 opacity-0"
+              className="absolute top-0 right-0 h-full w-full cursor-pointer py-0 opacity-0 focus:outline-none appearance-none"
               type="range"
               step="0.5"
               min="0"

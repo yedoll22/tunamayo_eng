@@ -24,6 +24,7 @@ const Comments = () => {
   const writeCommentHandler = () => {
     if (userInfo?.data) navigate(`/toilet/${toiletId}/comment`);
     else if (!userInfo?.data) {
+      window.scrollTo(0, 0);
       setPostState(true);
       dispatch(displayModal());
     }
