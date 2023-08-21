@@ -7,7 +7,7 @@ const MyComments = () => {
 
   return (
     <>
-      <DrawerHeader isAdmin={false} title="내가 쓴 리뷰" rightNone />
+      <DrawerHeader isAdmin={false} title="내가 작성한 리뷰" rightNone />
       {myComments?.data?.length ? null : (
         <div className="flex flex-col items-center pt-10">
           <img
