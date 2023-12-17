@@ -17,7 +17,7 @@ const Admin = () => {
 
   useEffect(() => {
     if (userInfo.isError) dispatch(displayModal());
-  }, [userInfo]);
+  }, [userInfo, dispatch]);
 
   return (
     <>
@@ -26,7 +26,7 @@ const Admin = () => {
       ) : (
         <div className="relative">
           <>
-            <DrawerHeader title="관리자 페이지" isAdmin={true} />
+            <DrawerHeader title="관리자 페이지입니다." isAdmin={true} />
             {modal ? null : (
               <>
                 <div
