@@ -8,7 +8,7 @@ const toiletController = {
   getAll: async (req: Request, res: Response) => {
     try {
       const toiletList = await DB.manager.find(Toilet);
-      return res.status(200).json({ toiletList });
+      return res.status(200).json({ toiletList, testKey: 'test' });
     } catch (err) {
       return res.sendStatus(500);
     }
