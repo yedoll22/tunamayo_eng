@@ -110,6 +110,15 @@ const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
               버전정보
             </div>
 
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/admin");
+              }}
+            >
+              관리자 페이지
+            </div>
+
             {userInfo?.data?.isAdmin ? (
               <div
                 className="cursor-pointer"

@@ -7,9 +7,11 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from "typeorm";
+
 import { Comment } from "./Comment";
 import { Like } from "./Like";
 import { Report } from "./Report";
+import { Subscribe } from "./Subscribe";
 
 @Entity("user")
 export class User extends BaseEntity {
@@ -45,4 +47,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Report, (report) => report.userId)
   reports: Report[];
+
+  @OneToMany(() => Subscribe, (subscribe) => subscribe.userId)
+  subscribes: Subscribe[];
 }

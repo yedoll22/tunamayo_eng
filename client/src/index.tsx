@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { QueryClient, QueryClientProvider } from "react-query";
+
 import "./index.css";
 
 const root = ReactDOM.createRoot(
@@ -11,6 +12,15 @@ const root = ReactDOM.createRoot(
 );
 
 const queryClient = new QueryClient();
+
+// Service worker registration
+const registerServiceWorker = () => {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("service-worker.js")
+      .then(() => console.log("Service worker registered successfully."));
+  }
+};
 
 root.render(
   <React.StrictMode>
@@ -21,3 +31,5 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
+
+registerServiceWorker();

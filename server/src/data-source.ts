@@ -13,5 +13,5 @@ export const DB = new DataSource({
   synchronize: false,
   logging: true,
   entities: [__dirname + "/entity/**/*.ts"],
-  migrations: [],
+  migrations: [__dirname + "/migrations/**/*.ts"],
 });
