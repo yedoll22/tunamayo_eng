@@ -1,5 +1,10 @@
 console.log("Service-worker run...");
 
+self.addEventListener('install', (event) => {
+  console.log('install', { event });
+  event.waitUntil(self.skipWaiting());
+});
+
 self.addEventListener("push", function (event) {
   console.log("event: ", event);
   console.log("event.data: ", event.data);
