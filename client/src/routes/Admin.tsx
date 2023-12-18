@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { displayModal } from "../slices/modalSlice";
 import { useUserInfoQuery } from "../api/user";
+import { useIssueSubscriptionsMutation } from "../api/subscribe";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ const Admin = () => {
 
   const modal = useSelector<RootState>((state) => state.modal.value);
   const userInfo = useUserInfoQuery();
+
+  const issueSubscriptionsMutation = useIssueSubscriptionsMutation();
 
   // useEffect(() => {
   //   if (userInfo.isError) dispatch(displayModal());
@@ -43,7 +46,9 @@ const Admin = () => {
                 </div>
 
                 <div
-                  onClick={() => {}}
+                  onClick={() => {
+                    issueSubscriptionsMutation.mutate();
+                  }}
                   className="py-36 text-center cursor-pointer hover:text-#1890FF"
                 >
                   알림 발송 테스트

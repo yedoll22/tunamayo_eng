@@ -17,6 +17,16 @@ const addSubscribtion = (subscribeInfo: subscribtionVariable) => {
   });
 };
 
+const issueSubscriptions = () => {
+  return customAxios.post("/subscribes/notification");
+};
+
+export const useIssueSubscriptionsMutation = () => {
+  return useMutation(issueSubscriptions, {
+    onSuccess: () => console.log("알림 발송 완료"),
+  });
+};
+
 export const useAddSubscribtionMutation = (successFn: () => void) =>
   useMutation(addSubscribtion, {
     onSuccess: () => successFn(),
