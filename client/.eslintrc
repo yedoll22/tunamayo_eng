@@ -16,7 +16,8 @@
     "postcss.config.js",
     ".prettierrc",
     "tailwind.config.js",
-    "public/pwabuilder-sw.js"
+    "public/pwabuilder-sw.js",
+    "public/service-worker.js"
   ],
   "rules": {
     "prettier/prettier": "error",

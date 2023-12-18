@@ -24,6 +24,7 @@ import { useToiletModalInfoQuery } from "../api/comment";
 import { CommentInfoProps } from "../types/comment";
 import { ToiletInfoProps } from "../types/toilet";
 import { ModalPopUpState } from "../types/common";
+import PushNotificationButton from "../components/main/PushNotificationButton";
 
 interface Center {
   lat: number;
@@ -226,6 +227,7 @@ const Main = () => {
                   setModalPopUp={setModalPopUp}
                 />
                 <CurrentLocationButton />
+                <PushNotificationButton />
 
                 {isLoading ? (
                   <Loading content="현재 위치 불러 오는 중" />

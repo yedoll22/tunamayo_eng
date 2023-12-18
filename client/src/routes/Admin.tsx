@@ -15,9 +15,9 @@ const Admin = () => {
   const modal = useSelector<RootState>((state) => state.modal.value);
   const userInfo = useUserInfoQuery();
 
-  useEffect(() => {
-    if (userInfo.isError) dispatch(displayModal());
-  }, [userInfo, dispatch]);
+  // useEffect(() => {
+  //   if (userInfo.isError) dispatch(displayModal());
+  // }, [userInfo, dispatch]);
 
   return (
     <>
@@ -26,7 +26,7 @@ const Admin = () => {
       ) : (
         <div className="relative">
           <>
-            <DrawerHeader title="관리자 페이지입니다." isAdmin={true} />
+            <DrawerHeader title="관리자 페이지" isAdmin={true} />
             {modal ? null : (
               <>
                 <div
@@ -40,6 +40,13 @@ const Admin = () => {
                   className="cursor-pointer py-9 text-center border-b border-gray20 text-base font-normal leading-[26px] text-tnBlack"
                 >
                   문의 리스트
+                </div>
+
+                <div
+                  onClick={() => {}}
+                  className="py-36 text-center cursor-pointer hover:text-#1890FF"
+                >
+                  알림 발송 테스트
                 </div>
               </>
             )}

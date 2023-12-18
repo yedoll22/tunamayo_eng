@@ -1,0 +1,23 @@
+import { useMutation } from "react-query";
+import { customAxios } from "../lib/customAxios";
+
+interface subscribtionVariable {
+  expirationTime: any;
+  p256Key: string;
+  authKey: string;
+  endpoint: string;
+}
+
+const addSubscribtion = (subscribeInfo: subscribtionVariable) => {
+  return customAxios.post("/subscribes", {
+    expirationTime: subscribeInfo.expirationTime,
+    p256Key: subscribeInfo.p256Key,
+    authKey: subscribeInfo.authKey,
+    endpoint: subscribeInfo.endpoint,
+  });
+};
+
+export const useAddSubscribtionMutation = (successFn: () => void) =>
+  useMutation(addSubscribtion, {
+    onSuccess: () => successFn(),
+  });

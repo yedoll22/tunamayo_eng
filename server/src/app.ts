@@ -5,6 +5,7 @@ import helmet from "helmet";
 import userRouter from "./router/users";
 import toiletRouter from "./router/toilets";
 import reportRouter from "./router/reports";
+import subscribeRouter from "./router/subscribes";
 import cookieparser from "cookie-parser";
 import "reflect-metadata";
 import { DB } from "./data-source";
@@ -37,6 +38,7 @@ app.use(cookieparser());
 app.use("/users", userRouter);
 app.use("/toilets", toiletRouter);
 app.use("/reports", reportRouter);
+app.use("/subscribes", subscribeRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).send("Not Found");
