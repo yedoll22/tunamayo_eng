@@ -36,7 +36,7 @@ const subscribeController = {
       
       const subscriptions = await DB.manager.find(Subscribe);
 
-      const notificationPayload = JSON.stringify({ title: 'Snackpot' });
+      const notificationPayload = JSON.stringify({ title: 'notification' });
       const sendNotifications = subscriptions.map(sub => {
         const pushConfig = {
           endpoint: sub.endpoint,
@@ -49,9 +49,9 @@ const subscribeController = {
         return webPush.sendNotification(pushConfig, notificationPayload);
     });
 
-      await Promise.all(sendNotifications);
+      const sendResult = await Promise.all(sendNotifications);
 
-      return res.sendStatus(201);
+      return res.status(200).json({sendResult});
     } catch (err) {
       return res.sendStatus(500);
     }
