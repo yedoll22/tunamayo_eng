@@ -7,6 +7,7 @@ const APPLICATION_SERVER_KEY =
 const PushNotificationButton = () => {
   const addSubscribtionMutation = useAddSubscribtionMutation(() => {});
 
+  // 알쓸개솔-구독등록
   const handleSubscribe = () => {
     navigator.serviceWorker.ready.then((registration) => {
       registration.pushManager.getSubscription().then(() => {
@@ -19,7 +20,7 @@ const PushNotificationButton = () => {
             const { endpoint, expirationTime } = subscribtionInfo;
             const p256dhArrayBuffer = subscribtionInfo.getKey("p256dh");
             const authKeyArrayBuffer = subscribtionInfo.getKey("auth");
-            console.log({ endpoint });
+            console.log({ subscribtionInfo });
 
             const p256dh = arrayBufferToBase64(p256dhArrayBuffer);
             const authKey = arrayBufferToBase64(authKeyArrayBuffer);
