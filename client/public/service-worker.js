@@ -7,8 +7,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener("push", function (event) {
-  console.log("event: ", event);
-  console.log("event.data: ", event.data);
+  console.log("push event: ", event);
   const payload = event.data ? event.data.text() : "No payload";
 
   console.log({ payload })
@@ -18,4 +17,8 @@ self.addEventListener("push", function (event) {
       body: payload,
     })
   );
+});
+
+self.addEventListener("fetch", function (event) {
+  console.log("fetch event: ", event);
 });
