@@ -8,6 +8,7 @@ interface subscribtionVariable {
   endpoint: string;
 }
 
+// 알쓸개솔-구독하기 요청
 const addSubscribtion = (subscribeInfo: subscribtionVariable) => {
   return customAxios.post("/subscribes", {
     expirationTime: subscribeInfo.expirationTime,
@@ -17,6 +18,7 @@ const addSubscribtion = (subscribeInfo: subscribtionVariable) => {
   });
 };
 
+// 알쓸개솔-푸시알림 발송
 const issueSubscriptions = () => {
   return customAxios.post("/subscribes/notification");
 };

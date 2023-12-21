@@ -1,5 +1,5 @@
 import Modal from "../common/Modal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -13,6 +13,8 @@ const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
 
   const logoutModal = useSelector<RootState>((state) => state.modal.value);
   const [logoutState, setLogoutState] = useState<boolean>(false);
+
+  const promptRef = useRef<any>(null);
 
   const logout = useLogoutQuery();
   const userInfo = useUserInfoQuery();
@@ -35,6 +37,14 @@ const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
     if (drawerClose) return defaultClass + "animate-drawPopDown";
     else return defaultClass + "animate-drawPopUp";
   };
+
+  // 알쓸개솔-deferredPrompt
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      promptRef.current = event;
+    });
+  }, []);
 
   return (
     <>
@@ -111,12 +121,13 @@ const Drawer = ({ drawer, drawerClose }: DrawerProps) => {
             </div>
 
             <div
-              className="cursor-pointer"
               onClick={() => {
-                navigate("/admin");
+                if (!promptRef || !promptRef.current) return;
+                promptRef.current.prompt();
               }}
+              className="cursor-pointer"
             >
-              관리자 페이지
+              앱 설치하기
             </div>
 
             {userInfo?.data?.isAdmin ? (
