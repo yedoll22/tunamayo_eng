@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(
 
 const queryClient = new QueryClient();
 
-// Service worker registration
+// 알쓸개솔-서비스워크 등록
 const registerServiceWorker = () => {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker

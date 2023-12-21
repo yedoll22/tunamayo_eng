@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { User } from "./User";
 
+// 알쓸개솔-서버 구독 테이블 엔티티
 @Entity("subscribe")
 export class Subscribe extends BaseEntity {
   @PrimaryGeneratedColumn()
