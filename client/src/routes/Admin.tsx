@@ -1,11 +1,11 @@
 import DrawerHeader from "../components/common/DrawerHeader";
 import Loading from "../components/common/Loading";
 import Modal from "../components/common/Modal";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { displayModal } from "../slices/modalSlice";
+import { displayModal, hideModal } from "../slices/modalSlice";
 import { useUserInfoQuery } from "../api/user";
 import { useIssueSubscriptionsMutation } from "../api/subscribe";
 
@@ -14,13 +14,27 @@ const Admin = () => {
   const dispatch = useDispatch();
 
   const modal = useSelector<RootState>((state) => state.modal.value);
+
+  const [subscribtionResponseMessage, setSubscribtionResponseMessage] =
+    useState("");
   const userInfo = useUserInfoQuery();
 
-  const issueSubscriptionsMutation = useIssueSubscriptionsMutation();
+  const issueSubscriptionsMutation = useIssueSubscriptionsMutation({
+    handleSuccess: () => {
+      setSubscribtionResponseMessage("알림 전송에 성공했습니다!");
+      dispatch(displayModal());
+    },
+    handleError: () => {
+      setSubscribtionResponseMessage(
+        "알림 전송에 실패했습니다. 잠시후 다시 시도해주세요."
+      );
+      dispatch(displayModal());
+    },
+  });
 
-  // useEffect(() => {
-  //   if (userInfo.isError) dispatch(displayModal());
-  // }, [userInfo, dispatch]);
+  useEffect(() => {
+    if (userInfo.isError) dispatch(displayModal());
+  }, [userInfo, dispatch]);
 
   return (
     <>
@@ -59,10 +73,21 @@ const Admin = () => {
         </div>
       )}
 
-      {modal && (
+      {modal && userInfo.isError && (
         <Modal
           title="관리자만 접근이 가능합니다."
           action={() => navigate("/", { replace: true })}
+          oneButton="확인"
+        />
+      )}
+
+      {modal && !!subscribtionResponseMessage && (
+        <Modal
+          title={subscribtionResponseMessage}
+          action={() => {
+            dispatch(hideModal());
+            setSubscribtionResponseMessage("");
+          }}
           oneButton="확인"
         />
       )}
