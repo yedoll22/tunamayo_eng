@@ -5,36 +5,51 @@ const APPLICATION_SERVER_KEY =
   "BBSrEAyO1SN5rRei93KLnsR6KQswGlWRHiLHeYpMY9dwC9n-eVByPlD5j9d2jdTth03KrF__5XUvu7R6ObdckAY";
 
 const PushNotificationButton = () => {
-  const addSubscribtionMutation = useAddSubscribtionMutation(() => {});
+  const addSubscribtionMutation = useAddSubscribtionMutation({
+    handleSuccess: (successedResponse) => {
+      console.log({ successedResponse });
+    },
+  });
 
   // 알쓸개솔-구독등록
-  const handleSubscribe = () => {
-    navigator.serviceWorker.ready.then((registration) => {
-      registration.pushManager.getSubscription().then(() => {
-        registration.pushManager
-          .subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: APPLICATION_SERVER_KEY,
-          })
-          .then((subscribtionInfo) => {
-            const { endpoint, expirationTime } = subscribtionInfo;
-            const p256dhArrayBuffer = subscribtionInfo.getKey("p256dh");
-            const authKeyArrayBuffer = subscribtionInfo.getKey("auth");
-            console.log({ subscribtionInfo });
+  const handleSubscribe = async () => {
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      const existingSubscribtion =
+        await registration.pushManager.getSubscription();
 
-            const p256dh = arrayBufferToBase64(p256dhArrayBuffer);
-            const authKey = arrayBufferToBase64(authKeyArrayBuffer);
-            if (!p256dh || !authKey) return;
+      if (existingSubscribtion) {
+        console.log("이미 구독 정보가 있습니다.", { existingSubscribtion });
+        return;
+      }
 
-            addSubscribtionMutation.mutate({
-              expirationTime,
-              p256Key: p256dh,
-              authKey,
-              endpoint,
-            });
-          });
-      });
-    });
+      if (!existingSubscribtion) {
+        const newSubscribtionInfo = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: APPLICATION_SERVER_KEY,
+        });
+
+        console.log({ newSubscribtionInfo });
+
+        const { endpoint, expirationTime } = newSubscribtionInfo;
+        const p256dhArrayBuffer = newSubscribtionInfo.getKey("p256dh");
+        const authKeyArrayBuffer = newSubscribtionInfo.getKey("auth");
+
+        const p256dh = arrayBufferToBase64(p256dhArrayBuffer);
+        const authKey = arrayBufferToBase64(authKeyArrayBuffer);
+
+        if (!p256dh || !authKey) return;
+
+        addSubscribtionMutation.mutate({
+          expirationTime,
+          p256Key: p256dh,
+          authKey,
+          endpoint,
+        });
+      }
+    } catch (error) {
+      console.error("Error subscribing to push notifications:", error);
+    }
   };
 
   return (
