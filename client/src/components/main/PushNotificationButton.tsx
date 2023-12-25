@@ -20,6 +20,10 @@ const PushNotificationButton = () => {
 
       if (existingSubscribtion) {
         console.log("이미 구독 정보가 있습니다.", { existingSubscribtion });
+
+        // 이미 구독 정보가 있는 경우
+        // 모달 디스플레이
+        // 해당 endpoint가 있는 record 삭제
         return;
       }
 
