@@ -34,17 +34,22 @@ self.addEventListener("fetch", function (event) {
           }
   
           return fetch(event.request).then(response => {
-            if (!response || response.status !== 200 || response.type !== 'basic') {
+            if (!response || response.status !== 200) {
+              console.log("기본 네트워크 응답 event.request : ", event.request);
+              console.log("기본 네트워크 응답 response : ", response);
               return response;
             }
   
             const responseToCache = response.clone();
+            console.log('응답 복사')
   
             caches.open(CACHE_NAME)
               .then(cache => {
                 // 캐시에 저장
+                console.log("캐시에 저장")
                 cache.put(event.request, responseToCache);
-              });
+                return cache
+              }).then(c => console.log("캐시 저장 완료", c));
   
             return response;
           });
