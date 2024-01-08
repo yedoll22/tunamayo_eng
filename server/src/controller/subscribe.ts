@@ -39,7 +39,6 @@ const subscribeController = {
       
       const subscriptions = await DB.manager.find(Subscribe);
 
-      const notificationPayload = "새해복 많이 받으세요.";
       const sendNotifications = subscriptions.map(sub => {
         const pushConfig = {
           endpoint: sub.endpoint,
@@ -48,7 +47,8 @@ const subscribeController = {
             auth: sub.authKey
           }
         };
-
+        
+        const notificationPayload = "새해복 많이 받으세요.";
         return webPush.sendNotification(pushConfig, notificationPayload);
     });
 
