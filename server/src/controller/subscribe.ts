@@ -4,7 +4,7 @@ import { DB } from "../data-source";
 import { Subscribe } from "../entity/Subscribe";
 import webPush from 'web-push';
 
-// 알쓸개솔-서버 구독 컨트롤러
+// 알쓸개솔-서버 구독 컨트롤러 수정
 const subscribeController = {
   // 구독 추가
   addSubscribe: async (req: CustomRequest, res: Response) => {
