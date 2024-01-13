@@ -10,6 +10,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener("push", function (event) {
   console.log("push event: ", event);
+  
   const payload = event.data ? event.data.text() : "No payload";
 
   console.log({ payload })
@@ -47,6 +48,7 @@ self.addEventListener("fetch", function (event) {
               .then(cache => {
                 // 캐시에 저장
                 console.log("캐시에 저장")
+
                 cache.put(event.request, responseToCache);
                 return cache
               }).then(c => console.log("캐시 저장 완료", c));

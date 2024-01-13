@@ -4,7 +4,7 @@ import { DB } from "../data-source";
 import { Subscribe } from "../entity/Subscribe";
 import webPush from 'web-push';
 
-// 알쓸개솔-서버 구독 컨트롤러
+// 알쓸개솔-서버 구독 컨트롤러 수정
 const subscribeController = {
   // 구독 추가
   addSubscribe: async (req: CustomRequest, res: Response) => {
@@ -39,7 +39,6 @@ const subscribeController = {
       
       const subscriptions = await DB.manager.find(Subscribe);
 
-      const notificationPayload = "새해복 많이 받으세요.";
       const sendNotifications = subscriptions.map(sub => {
         const pushConfig = {
           endpoint: sub.endpoint,
@@ -48,7 +47,8 @@ const subscribeController = {
             auth: sub.authKey
           }
         };
-
+        
+        const notificationPayload = "새해복 많이 받으세요.";
         return webPush.sendNotification(pushConfig, notificationPayload);
     });
 
