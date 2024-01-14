@@ -25,7 +25,7 @@ const subscribeController = {
     }
   },
 
-  // 푸시 알림 발송
+  // 푸시 알림 발송 수정
   sendNotification: async (req: CustomRequest, res: Response) => {
     try {
       const vapidPublicKey = process.env.VAPID_PUBLIC_KEY as string;
