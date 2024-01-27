@@ -4,9 +4,7 @@ import { DB } from "../data-source";
 import { Subscribe } from "../entity/Subscribe";
 import webPush from 'web-push';
 
-// 알쓸개솔-서버 구독 컨트롤러 수정
 const subscribeController = {
-  // 구독 추가
   addSubscribe: async (req: CustomRequest, res: Response) => {
     const userId = req.userId;
     const { expirationTime, p256Key, authKey, endpoint } = req.body;
@@ -25,7 +23,6 @@ const subscribeController = {
     }
   },
 
-  // 푸시 알림 발송 수정
   sendNotification: async (req: CustomRequest, res: Response) => {
     try {
       const vapidPublicKey = process.env.VAPID_PUBLIC_KEY as string;
